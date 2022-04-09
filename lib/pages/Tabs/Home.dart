@@ -2,8 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:uphold/components/GymCardItem.dart';
-import 'package:uphold/pages/Gyms/GymDetails.dart';
-import 'package:uphold/pages/Persons/Record.dart';
+
 
 class TestBean {
   String title;
@@ -39,12 +38,12 @@ class _HomePageState extends State<HomePage> {
   _getData() {
     //一个JSON格式的字符串
     String jsonStr =
-        '[{"title":"张三","description":"   张三描述张张三描张三描述张三描述张三描述张三描述张三描述张三描述张三描述述张三描述张三描述张三描述张三描述张三描述张三描述三描述张三描述张三描述张三描述张三描述张三描述","isCollect":"1"},'
-        '{"title":"张三","description":"张三描述张三描述张三描述张三描述张三描述张三描述张三描述张三描述张三描述张三描述张三描述张三描述张三描述张三描述","isCollect":"0"},'
-        '{"title":"张三","description":"张三描述张三描述张三描述张三描述张三描述张三描述张三描述","isCollect":"1"},'
-        '{"title":"张三","description":"张三描张三描述张三描述张三描述张三描述张三描述张三描述张三描述述张三描述张三描述张三描述张三描述张三描述张三描述","isCollect":"0"},'
-        '{"title":"张三","description":"张三描述张三描述张三描述张三描述张三描述张三描述张三描述","isCollect":"0"},'
-        '{"title":"李四","description":"李四描述李四描述李四描述李四描述李四描述李四描述李四描述","isCollect":"1"}]';
+        '[{"title":"健身房名称0","description":"健身房描述健身房描述健身房描述健身房房描述健身房描述健描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"1"},'
+        '{"title":"健身房名称1","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"0"},'
+        '{"title":"健身房名称2","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"1"},'
+        '{"title":"健身房名称3","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"0"},'
+        '{"title":"健身房名称4","description":"健身房描述健身房描述健身房描述健房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"0"},'
+        '{"title":"健身房名称5","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"1"}]';
     //将JSON字符串转为List
     _list = json.decode(jsonStr);
 
