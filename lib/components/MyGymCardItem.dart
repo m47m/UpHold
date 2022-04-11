@@ -25,7 +25,7 @@ class _ListItemState extends State<MyGymCardItem> {
     return InkWell(
       onTap: (){
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => Reservartion(
+            builder: (context) => GymDetails(
               title: widget.bean.title,
             )));
       },
@@ -92,7 +92,10 @@ class _ListItemState extends State<MyGymCardItem> {
                     margin: EdgeInsets.fromLTRB(0, 5, 25, 0),
                     child: OutlinedButton(
                       onPressed: (){
-
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Reservartion(
+                              title: widget.bean.title,
+                            )));
                       },
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(Colors.grey.shade400)
