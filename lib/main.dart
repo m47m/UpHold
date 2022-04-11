@@ -6,6 +6,7 @@ import 'package:uphold/pages/Login.dart';
 import 'package:uphold/pages/Persons/Collections.dart';
 import 'package:uphold/pages/Persons/Message.dart';
 import 'package:uphold/pages/Persons/Record.dart';
+import 'package:uphold/pages/Reservation.dart';
 import 'pages/Tabs.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
@@ -55,6 +56,8 @@ class _MyAppState extends State<MyApp> {
         '/record':(context)=>(Record()),
         '/collections':(context)=>(Collections()),
         '/details':(context)=>(GymDetails(title: '',)),
+        '/reservartion':(context)=>(Reservartion(title:'',)),
+
       },
     );
   }

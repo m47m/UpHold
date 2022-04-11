@@ -7,7 +7,7 @@ class GardCardItem extends StatefulWidget {
   ///本Item对应的数据模型
   final TestBean bean;
 
-  GardCardItem({required this.bean, required Key key}) : super(key: key);
+  GardCardItem({required this.bean,  required Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -45,11 +45,14 @@ Column buildColumn() {
           "${widget.bean.title}",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
         ),
-        margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+        margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
       ),
       IntrinsicHeight(
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
+            //图片
             Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -78,7 +81,7 @@ Column buildColumn() {
                     ),
                   ),
                 ),
-
+                //收藏
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
                   child: IconButton(
@@ -114,26 +117,6 @@ Column buildColumn() {
                   height: 30,
                 ),
 
-                // //button
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   children: [
-                //     //收藏
-                //     InkWell(
-                //       onTap: () {
-                //         setState(() {
-                //           this._list[index]["type"] = "0";
-                //         });
-                //       },
-                //       child: Icon(
-                //         this._list[index]["type"] == "1"
-                //             ? Icons.favorite_border
-                //             : Icons.favorite,
-                //         color: Colors.blue,
-                //       ),
-                //     ),
-                //   ],
-                // )
               ],
             )
           ],

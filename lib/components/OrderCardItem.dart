@@ -62,7 +62,6 @@ class OrderCardItem extends StatelessWidget {
             ),
             Container(
               height: 50,
-
               margin: EdgeInsets.fromLTRB(15, 5, 15, 10),
               child: Text(
                 "${this.bean.description}",
