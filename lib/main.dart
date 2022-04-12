@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uphold/Utils/SpUtils.dart';
+import 'package:uphold/pages/Apply.dart';
 import 'package:uphold/pages/Gyms/GymDetails.dart';
+import 'package:uphold/pages/Gyms/VenuesDetails.dart';
 import 'package:uphold/pages/Login.dart';
 import 'package:uphold/pages/Persons/Collections.dart';
 import 'package:uphold/pages/Persons/Message.dart';
@@ -57,7 +59,8 @@ class _MyAppState extends State<MyApp> {
         '/collections':(context)=>(Collections()),
         '/details':(context)=>(GymDetails(title: '',)),
         '/reservartion':(context)=>(Reservartion(title:'',)),
-
+        '/venuesdetails':(context)=>(VenuesDetails(title: ' ',)),
+        '/apply':(context)=>(Apply())
       },
     );
   }

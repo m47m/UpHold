@@ -41,9 +41,12 @@ Column buildColumn() {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
+        width: 320,
         child: Text(
           "${widget.bean.title}",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
         ),
         margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
       ),

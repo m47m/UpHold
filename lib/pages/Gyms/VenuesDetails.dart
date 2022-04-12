@@ -1,35 +1,37 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:uphold/components/VenuesCardItem.dart';
+import 'package:uphold/components/EquipmentItem.dart';
+import 'package:uphold/pages/Reservation.dart';
 
-import '../Apply.dart';
-import 'VenuesDetails.dart';
-
-class VenuesBean {
+class EquipmentBean {
   String title;
   String description;
 
-  VenuesBean({
+  EquipmentBean({
     required this.title,
     required this.description,
   });
 }
 
-class GymDetails extends StatefulWidget {
+class VenuesDetails extends StatefulWidget {
   String title = " ";
 
-  GymDetails({required this.title, Key? key}) : super(key: key);
+  VenuesDetails({required this.title, Key? key}) : super(key: key);
 
   @override
-  _GymDetailsState createState() => _GymDetailsState(this.title);
+  _VenuesDetailsState createState() => _VenuesDetailsState(this.title);
 }
 
-class _GymDetailsState extends State<GymDetails> {
+class _VenuesDetailsState extends State<VenuesDetails> {
   String title = " ";
+
+  _VenuesDetailsState(this.title) {}
+
   List _list = [];
+
   ///测试数据集合
-  List<VenuesBean> _testList = [];
+  List<EquipmentBean> _testList = [];
 
   @override
   void initState() {
@@ -40,18 +42,44 @@ class _GymDetailsState extends State<GymDetails> {
   _getData() {
     //一个JSON格式的字符串
     String jsonStr =
-        '[{"title":"场所名称0","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"1"},'
-        '{"title":"场所名称1","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"0"},'
-        '{"title":"场所名称2","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"1"},'
-        '{"title":"场所名称3","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"0"},'
-        '{"title":"场所名称4","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"0"},'
-        '{"title":"场所名称5","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"1"}]';
+        '[{"title":"设备名称0","description":"设备描述设备描述设备描设备描述设备描述设备描述设备描述设备描描述设备描述设备描述设备描述","isCollect":"1"},'
+        '{"title":"设备名称0","description":"设备描述设备描述设备描述设备描述设备描述设备描述设备描述设备描述","isCollect":"0"},'
+        '{"title":"设备名称0","description":"设备描述设备描述设备描述设备描述设备描述备描述设备描述设备描述设备描述设备描述设备描述","isCollect":"1"},'
+        '{"title":"设备名称0","description":"设备描述设备描述设备描述设备描述设备描述设备描述设备描述设备描述","isCollect":"0"},'
+        '{"title":"设备名称0","description":"设备描述设备描述设备描述设备描述设备描述设备描述设备描述设备描述","isCollect":"0"},'
+        '{"title":"设备名称0","description":"设备描述设备描述设备描述设备描述设备描述设备描述设备描述设备描述","isCollect":"1"}]';
     //将JSON字符串转为List
     _list = json.decode(jsonStr);
     for (int i = 0; i < _list.length; i++) {
-      _testList.add(new VenuesBean(
+      _testList.add(new EquipmentBean(
           title: _list[i]["title"], description: _list[i]["description"]));
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        titleSpacing: 0,
+        //清除title左右padding，默认情况下会有一定的padding距离
+        toolbarHeight: 75,
+        //将高度定到44，设计稿的高度。为了方便适配，
+        //推荐使用插件flutter_screenutil做屏幕的适配工作
+        backgroundColor: Colors.white,
+        elevation: 1,
+        //由于title本身是接受一个widget，所以可以直接给他一个自定义的widget。
+        centerTitle: true,
+        //由于title本身是接受一个widget，所以可以直接给他一个自定义的widget。
+        title: new Text(
+          'VenuesDetails',
+          style: TextStyle(color: Colors.black),
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.black, //修改颜色
+        ),
+      ),
+      body: this.buildListView(),
+    );
   }
 
   buildListView() {
@@ -63,7 +91,6 @@ class _GymDetailsState extends State<GymDetails> {
       },
     );
   }
-
   // 总count数
   int _getItemListCount() {
     return this._testList.length + 1;
@@ -80,7 +107,7 @@ class _GymDetailsState extends State<GymDetails> {
 
   Widget _itemBuildWidget(BuildContext context, int index) {
     return new Container(
-      child: VenuesCardItem(
+      child: EquipmentItem(
         ///子Item对应的数据
         bean: _testList[index],
 
@@ -127,13 +154,12 @@ class _GymDetailsState extends State<GymDetails> {
           Container(
             margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
             child: Text(
-              "健身房描述健身房描述健身房描述身房描述健身房身房描述健身房身房描述健述健身房描述",
+              "场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
           ),
-
           Container(
             margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
             child: Text(
@@ -143,7 +169,6 @@ class _GymDetailsState extends State<GymDetails> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-
           Container(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -151,14 +176,14 @@ class _GymDetailsState extends State<GymDetails> {
                 OutlinedButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => Apply(
-
-                          )));
+                          builder: (context) => Reservartion(
+                                title: ' ',
+                              )));
                     },
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.blue.shade300)
-                    ),
-                    child: Text("办卡",style: TextStyle(color: Colors.white))),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.blue.shade300)),
+                    child: Text("预约", style: TextStyle(color: Colors.white))),
               ],
             ),
           ),
@@ -167,36 +192,4 @@ class _GymDetailsState extends State<GymDetails> {
       ),
     );
   }
-
-  _GymDetailsState(this.title) {}
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0,
-        //清除title左右padding，默认情况下会有一定的padding距离
-        toolbarHeight: 50,
-        //将高度定到44，设计稿的高度。为了方便适配，
-        //推荐使用插件flutter_screenutil做屏幕的适配工作
-        backgroundColor: Colors.white,
-        elevation: 1,
-        //由于title本身是接受一个widget，所以可以直接给他一个自定义的widget。
-        centerTitle: true,
-        //由于title本身是接受一个widget，所以可以直接给他一个自定义的widget。
-        title: new Text(
-          "详情页",
-          style: TextStyle(color: Colors.black),
-        ),
-        iconTheme: IconThemeData(
-          color: Colors.black, //修改颜色
-        ),
-
-        //leading: Icon(Icons.arrow_back, color: Colors.black,),
-      ),
-      body: this.buildListView(),
-    );
-  }
 }
-
-

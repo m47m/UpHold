@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
     _list = json.decode(jsonStr);
 
     for(int i = 0;i<_list.length;i++){
-      _testList.add(new TestBean(title: _list[i]["title"], description: _list[i]["description"], isCollect: true ));
+      _testList.add(new TestBean(title: _list[i]["title"], description: _list[i]["description"], isCollect: _list[i]["isCollect"] == "1"? true:false ));
     }
   }
 

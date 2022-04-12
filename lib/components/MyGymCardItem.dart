@@ -3,9 +3,6 @@ import 'package:uphold/pages/Gyms/GymDetails.dart';
 import 'package:uphold/pages/Reservation.dart';
 import 'package:uphold/pages/Tabs/MyGym.dart';
 
-
-
-
 ///ListView 的子Item
 class MyGymCardItem extends StatefulWidget {
   ///本Item对应的数据模型

@@ -79,7 +79,7 @@ class _TabsState extends State<Tabs> {
           setState(() => _currentIndex = index);
           // _pageController.jumpToPage(index);
           _pageController.animateToPage(index,
-              duration: Duration(milliseconds: 300), curve: Curves.ease);
+              duration: Duration(milliseconds: 800), curve: Curves.ease);
 
         },
         items: <BottomNavyBarItem>[

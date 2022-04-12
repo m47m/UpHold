@@ -15,7 +15,10 @@ class Message extends StatelessWidget {
           //由于title本身是接受一个widget，所以可以直接给他一个自定义的widget。
           centerTitle: true,
           //由于title本身是接受一个widget，所以可以直接给他一个自定义的widget。
-          title: new Text('Message' ,style: TextStyle(color: Colors.black),)
+          title: new Text('Message' ,style: TextStyle(color: Colors.black),),
+        iconTheme: IconThemeData(
+          color: Colors.black, //修改颜色
+        ),
       ),
       body: Container(),
     );
