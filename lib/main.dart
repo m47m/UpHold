@@ -9,6 +9,7 @@ import 'package:uphold/pages/Persons/Collections.dart';
 import 'package:uphold/pages/Persons/Message.dart';
 import 'package:uphold/pages/Persons/Record.dart';
 import 'package:uphold/pages/Reservation.dart';
+import 'components/PhotoViewSimpleScreen.dart';
 import 'pages/Tabs.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
@@ -60,7 +61,8 @@ class _MyAppState extends State<MyApp> {
         '/details':(context)=>(GymDetails(title: '',)),
         '/reservartion':(context)=>(Reservartion(title:'',)),
         '/venuesdetails':(context)=>(VenuesDetails(title: ' ',)),
-        '/apply':(context)=>(Apply())
+        '/apply':(context)=>(Apply()),
+        '/photoviewsimplescreen':(context)=>(PhotoViewSimpleScreen(heroTag: '',)),
       },
     );
   }
