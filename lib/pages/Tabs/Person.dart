@@ -30,8 +30,8 @@ class _PersonPageState extends State<PersonPage> {
     final prefs = await SharedPreferences.getInstance();
     String? _user = prefs.getString("user");
     String? _token = prefs.getString("token");
-    print("_user:" + _user!);
-    print("_token:" + _token!);
+    // print("_user:" + _user!);
+    // print("_token:" + _token!);
     if (_user != null) {
       this.user = _user;
     }
