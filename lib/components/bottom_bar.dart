@@ -16,7 +16,7 @@ class BottomNavyBar extends StatelessWidget {
     this.iconSize = 24,
     this.backgroundColor,
     this.itemCornerRadius = 50,
-    this.containerHeight = 56,
+    this.containerHeight = 55,
     this.animationDuration = const Duration(milliseconds: 300),
     this.mainAxisAlignment = MainAxisAlignment.spaceBetween,
     required this.items,
@@ -81,7 +81,7 @@ class BottomNavyBar extends StatelessWidget {
         child: Container(
           width: double.infinity,
           height: containerHeight,
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           child: Row(
             mainAxisAlignment: mainAxisAlignment,
             children: items.map((item) {
@@ -146,6 +146,7 @@ class _ItemWidget extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           child: Container(
             width: isSelected ? 95 : 45,
+
             padding: EdgeInsets.symmetric(horizontal: 8),
             child: Row(
               mainAxisSize: MainAxisSize.max,

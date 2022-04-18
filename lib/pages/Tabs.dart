@@ -70,16 +70,16 @@ class _TabsState extends State<Tabs> {
       ),
       bottomNavigationBar: BottomNavyBar(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        containerHeight: 55,
+        containerHeight: 65,
         itemCornerRadius: 45,
         iconSize: 27,
-        curve: Curves.linear,
+        curve: Curves.easeOutQuint,
         selectedIndex: _currentIndex,
         onItemSelected: (index) {
           setState(() => _currentIndex = index);
-           _pageController.jumpToPage(index);
-          // _pageController.animateToPage(index,
-          //     duration: Duration(milliseconds: 800), curve: Curves.ease);
+          // _pageController.jumpToPage(index);
+          _pageController.animateToPage(index,
+              duration: Duration(milliseconds: 800), curve: Curves.ease);
 
         },
         items: <BottomNavyBarItem>[

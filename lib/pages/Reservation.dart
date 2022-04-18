@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 
+
+class FMRadioModel extends Object {
+
+  int index;
+  String text;
+
+  FMRadioModel(this.index, this.text);
+}
+
 class Reservartion extends StatefulWidget {
   String title = " ";
 
@@ -12,7 +21,44 @@ class Reservartion extends StatefulWidget {
 class _ReservartionState extends State<Reservartion> {
   _ReservartionState( this.title){
   }
+
+  List <FMRadioModel> _datas = [];
+  List <FMRadioModel> _datas2 = [];
+
+  int groupValueOfTimeline = 1;
+  int groupValueOfVenues = 1;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    initData();
+  }
+
+
+  void initData(){
+
+    _datas.add(FMRadioModel(1, "9:00-11:00"));
+    _datas.add(FMRadioModel(2, "11:00-13:00"));
+    _datas.add(FMRadioModel(3, "13:00-15:00"));
+    _datas.add(FMRadioModel(4, "15:00-17:00"));
+    _datas.add(FMRadioModel(5, "17:00-19:00"));
+
+    _datas2.add(FMRadioModel(1, "场所名称1"));
+    _datas2.add(FMRadioModel(2, "场所名称2"));
+    _datas2.add(FMRadioModel(3, "场所名称3"));
+    _datas2.add(FMRadioModel(4, "场所名称4"));
+    _datas2.add(FMRadioModel(5, "场所名称5"));
+
+    setState(() {
+
+    });
+  }
+
   String title = "";
+  String ReservationStatus = "0/100人";
+  String ReservationVenues = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +76,134 @@ class _ReservartionState extends State<Reservartion> {
         color: Colors.black, //修改颜色
       ),
       ),
-      body: Container(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          createColumn(),
+          Container(
+            width: 110,
+            height: 45,
+            margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+            child: OutlinedButton(
+                onPressed: ()  {
+
+                },
+                child: Text(
+                  "预约",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 17),
+                )),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildListView(){
+    return ListView.builder(
+      itemBuilder: (BuildContext context, int index){
+        return _buildRadioOfTime(_datas[index]);
+      },
+      itemCount: _datas.length,
+    );
+  }
+
+  _buildRadioOfTime(FMRadioModel model){
+    return Container(
+      child:  RadioListTile(
+        value: model.index,
+        groupValue: groupValueOfTimeline,
+        title: Text(model.text,style: TextStyle(fontSize: 15),),
+        onChanged: (index){
+          this.groupValueOfTimeline = model.index;
+          this.ReservationStatus = _datas[groupValueOfTimeline-1].text;
+          setState(() {  });
+        },
+      ),
+      height: 40,
+    );
+  }
+
+  _buildListView2(){
+    return ListView.builder(
+      itemBuilder: (BuildContext context, int index){
+        return _buildRadioOfVenues(_datas2[index]);
+      },
+      itemCount: _datas2.length,
+    );
+  }
+
+  _buildRadioOfVenues(FMRadioModel model){
+    return Container(
+      child:  RadioListTile(
+        value: model.index,
+        groupValue: groupValueOfVenues,
+        title: Text(model.text,style: TextStyle(fontSize: 15),),
+        onChanged: (index){
+          this.groupValueOfVenues = model.index;
+          this.ReservationVenues = _datas2[groupValueOfVenues-1].text;
+          setState(() {  });
+        },
+      ),
+      height: 40,
+    );
+  }
+
+  createColumn(){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.fromLTRB(10, 20, 5, 10),
+          child: Text("健身健身房名称健身房名称",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 18),maxLines: 1,),
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(10, 5, 5, 10),
+          child: Text("健身房地理位置健身房地理位置健身房地理位置健身房地理位置健身房地理位置",style: TextStyle(fontWeight: FontWeight.w300,fontSize: 16)),
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(10, 5, 5, 10),
+          child: Text("当前预约状态："+'${this.ReservationStatus} '+'${this.ReservationVenues} ',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 18 )),
+        ),
+        
+        Container(
+          margin: EdgeInsets.fromLTRB(10, 5, 0, 0),
+          child: Text("选择日期：",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16)),
+        ),
+
+        Container(
+          height: 30,
+          margin: EdgeInsets.fromLTRB(10, 5, 0, 0),
+          child: Text("",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16)),
+        ),
+
+
+
+        Container(
+          margin: EdgeInsets.fromLTRB(10, 5, 0, 0),
+          child: Text("选择时间：",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16)),
+        ),
+       
+       Container(
+         height: 41.0*_datas.length,
+         child:  _buildListView(),
+       ),
+
+        Container(
+          margin: EdgeInsets.fromLTRB(10, 5, 0, 0),
+          child: Text("选择场所：",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16)),
+        ),
+
+        Container(
+          height: 41.0*_datas.length,
+          child:  _buildListView2(),
+        ),
+
+
+      ],
     );
   }
 }

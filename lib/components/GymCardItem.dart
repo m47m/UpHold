@@ -54,7 +54,6 @@ Column buildColumn() {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
             //图片
             Container(
               decoration: BoxDecoration(

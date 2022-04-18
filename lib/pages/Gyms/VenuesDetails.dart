@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:uphold/components/EquipmentItem.dart';
+import 'package:uphold/components/PhotoViewSimpleScreen.dart';
 import 'package:uphold/pages/Reservation.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -116,7 +117,6 @@ class _VenuesDetailsState extends State<VenuesDetails> {
       child: EquipmentItem(
         ///子Item对应的数据
         bean: _testList[index],
-
         ///可选参数 子Item标识
         //key: GlobalObjectKey(index),
       ),
@@ -129,15 +129,27 @@ class _VenuesDetailsState extends State<VenuesDetails> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(1)),
-                color: Colors.blue,
-                image: DecorationImage(
+
+
+          InkWell(
+            onTap: (){
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => PhotoViewSimpleScreen(
+                    heroTag: 'simple',
+                    imageProvider: NetworkImage("https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80"),
+
+                  )));
+            },
+            child:  Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(1)),
+                  color: Colors.blue,
+                  image: DecorationImage(
                     //FileImage 本地图片   、NetworkImage 网络  、AssetImage资源
-                    image: NetworkImage("https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80"),
-                    fit: BoxFit.cover)),
-            height: 180,
+                      image: NetworkImage("https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80"),
+                      fit: BoxFit.cover)),
+              height: 180,
+            ),
           ),
           Container(
             margin: EdgeInsets.fromLTRB(10, 5, 0, 0),

@@ -7,6 +7,7 @@ import 'package:uphold/pages/Gyms/VenuesDetails.dart';
 import 'package:uphold/pages/Login.dart';
 import 'package:uphold/pages/Persons/Collections.dart';
 import 'package:uphold/pages/Persons/Message.dart';
+import 'package:uphold/pages/Persons/MsgDetails.dart';
 import 'package:uphold/pages/Persons/Record.dart';
 import 'package:uphold/pages/Reservation.dart';
 import 'components/PhotoViewSimpleScreen.dart';
@@ -63,6 +64,7 @@ class _MyAppState extends State<MyApp> {
         '/venuesdetails':(context)=>(VenuesDetails(title: ' ',)),
         '/apply':(context)=>(Apply()),
         '/photoviewsimplescreen':(context)=>(PhotoViewSimpleScreen(heroTag: '',)),
+        '/msgdetails':(context)=>(MsgDetails(bean: new MsgBean(title: "title", description: "description", from: "from", time: "time"),))
       },
     );
   }

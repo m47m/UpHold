@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uphold/pages/Persons/Collections.dart';
 import 'package:uphold/pages/Persons/Message.dart';
 import 'package:uphold/pages/Persons/Record.dart';
+
+import 'package:http/http.dart' as http;
 
 import '../../main.dart';
 import '../Login.dart';
@@ -17,6 +21,8 @@ class PersonPage extends StatefulWidget {
 class _PersonPageState extends State<PersonPage> {
   String user = "默认";
   String token = "1";
+  String saying = "多少事，从来急，天地转，光阴迫，一万年太久，只争朝夕多少事，从来急，天地转，光阴迫，一万年太久，只争朝夕";
+  String sayingApi = "https://v1.hitokoto.cn/?c=k";
 
   _logout() async {
     final prefs = await SharedPreferences.getInstance();
@@ -38,6 +44,15 @@ class _PersonPageState extends State<PersonPage> {
     if (_token != null) {
       this.token = _token;
     }
+
+    var url = Uri.parse(this.sayingApi);
+    var response = await http.get(url);
+    print('Response body: ${response.body}');
+
+    var responseJson = json.decode(response.body);
+    Map<String, dynamic> SayingMsg = responseJson;
+    this.saying = SayingMsg['hitokoto'].toString();
+
   }
 
   @override
@@ -69,154 +84,149 @@ class _PersonPageState extends State<PersonPage> {
         future: this._initUser(),
         builder: _buildFuture,
       ),
-      // body: Container(
-      //   alignment: Alignment.center,
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       Container(
-      //         width: 320,
-      //         height: 100,
-      //         child: Card(
-      //           child: Text(this.user),
-      //         ),
-      //       ),
-      //
-      //       Container(
-      //         width: 120,
-      //         height: 50,
-      //         child: OutlinedButton(
-      //             onPressed: ()  {
-      //               _logout();
-      //             },
-      //             child: Text(
-      //               "退出登录",
-      //               style: TextStyle(
-      //                   color: Colors.black,
-      //                   fontWeight: FontWeight.w400,
-      //                   fontSize: 17),
-      //             )),
-      //       ),
-      //     ],
-      //   ),
-      // ),
+
     );
   }
 
-  Widget PersonCard(){
-    return Container(
-      child: Card(
-        elevation: 3,//阴影
-        shape: const RoundedRectangleBorder(//形状
-          //修改圆角
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        color: Colors.white, //颜色
-        margin: EdgeInsets.all(10), //margin
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-             ListTile(
-              leading: Icon(Icons.person,size: 70,),
-              title: Text('用户名：'+'${this.user}'),
-              subtitle: Text('手机号：'),
-              trailing:
-                     Container(
-                       width: 100,
-                       height: 40,
-                       child: OutlinedButton(
-                           onPressed: () {
-                             _logout();
-                           },
-                           child: Text(
-                             "退出登录",
-                             style: TextStyle(
-                                 color: Colors.black,
-                                 fontWeight: FontWeight.w400,
-                                 fontSize: 17),
-                           )),
-                     ),
+  Widget PersonCard() {
+    return Column(
+      children: [
+        Container(
+          child: Card(
+            elevation: 3,
+            //阴影
+            shape: const RoundedRectangleBorder(
+              //形状
+              //修改圆角
+              borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
-            Divider(),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    child: InkWell(
-
-                      onTap: () {
-                        print("我的收藏");
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context)=>Collections())
-                        );
-                      },
-                      child:Column(
-                        children: [
-                          Icon(Icons.collections),
-                          Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
-                          Text("我的收藏")
-                        ],
-                      )
-                    ),
+            color: Colors.white,
+            //颜色
+            margin: EdgeInsets.all(10),
+            //margin
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ListTile(
+                  leading: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(3)),
+                        color: Colors.blue,
+                        image: DecorationImage(
+                          //FileImage 本地图片   、NetworkImage 网络  、AssetImage资源
+                            image: AssetImage('images/a.jpg'),
+                            fit: BoxFit.cover)),
+                    width: 65,
+                    height: 75,
                   ),
-                  Container(
-                    child: InkWell(
-                        onTap: () {
-                          print("办卡记录");
-                          Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context)=>Record())
-                          );
+                  title: Text('用户名：' + '${this.user}'),
+                  subtitle: Text('手机号：'),
+                  trailing: Container(
+                    width: 100,
+                    height: 40,
+                    child: OutlinedButton(
+                        onPressed: () {
+                          _logout();
                         },
-                        child:Column(
-                          children: [
-                            Icon(Icons.access_time),
-                            Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
-                            Text("办卡记录")
-                          ],
-                        )
-                    ),
+                        child: Text(
+                          "退出登录",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 17),
+                        )),
                   ),
-                  Container(
-                    child: InkWell(
-                        onTap: () {
-                          print("我的消息");
-                          Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context)=>Message())
-                          );
-                        },
-                        child:Column(
-                          children: [
-                            Icon(Icons.message_outlined),
-                            Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
-                            Text("我的消息")
-                          ],
-                        )
-                    ),
+                ),
+                Divider(),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        child: InkWell(
+                            onTap: () {
+                              print("我的收藏");
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Collections()));
+                            },
+                            child: Column(
+                              children: [
+                                Icon(Icons.collections),
+                                Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
+                                Text("我的收藏")
+                              ],
+                            )),
+                      ),
+                      Container(
+                        child: InkWell(
+                            onTap: () {
+                              print("办卡记录");
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Record()));
+                            },
+                            child: Column(
+                              children: [
+                                Icon(Icons.access_time),
+                                Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
+                                Text("办卡记录")
+                              ],
+                            )),
+                      ),
+                      Container(
+                        child: InkWell(
+                            onTap: () {
+                              print("我的消息");
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Message()));
+                            },
+                            child: Column(
+                              children: [
+                                Icon(Icons.message_outlined),
+                                Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
+                                Text("我的消息")
+                              ],
+                            )),
+                      ),
+                      Container(
+                        child: InkWell(
+                            onTap: () {
+                              print("申请教练");
+                            },
+                            child: Column(
+                              children: [
+                                Icon(Icons.upload_outlined),
+                                Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
+                                Text("申请教练")
+                              ],
+                            )),
+                      ),
+                    ],
                   ),
-                  Container(
-                    child: InkWell(
-                        onTap: () {
-                          print("申请教练");
-                        },
-                        child:Column(
-                          children: [
-
-                            Icon(Icons.upload_outlined),
-                            Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
-                            Text("申请教练")
-                          ],
-                        )
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
+                )
+              ],
+            ),
+          ),
         ),
-      ),
+        SizedBox(
+          height: 80,
+        ),
+        Container(
+          width: 350,
+          child:  Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width:320,
+                child: Text(this.saying) ,
+              )
+             
+            ],
+          ),
+        )
 
+
+      ],
     );
   }
 
@@ -237,41 +247,38 @@ class _PersonPageState extends State<PersonPage> {
         print('done');
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
         return PersonCard();
-        // return Container(
-        //   alignment: Alignment.center,
-        //   child: Column(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: [
-        //       Container(
-        //           width: 320,
-        //           height: 320,
-        //           child: Column(
-        //             children: [
-        //               Text(this.user),
-        //               Text(this.token),
-        //             ],
-        //           )),
-        //       Container(
-        //         width: 120,
-        //         height: 50,
-        //         child: OutlinedButton(
-        //             onPressed: () {
-        //               _logout();
-        //             },
-        //             child: Text(
-        //               "退出登录",
-        //               style: TextStyle(
-        //                   color: Colors.black,
-        //                   fontWeight: FontWeight.w400,
-        //                   fontSize: 17),
-        //             )),
-        //       ),
-        //     ],
-        //   ),
-        // );
+      // return Container(
+      //   alignment: Alignment.center,
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: [
+      //       Container(
+      //           width: 320,
+      //           height: 320,
+      //           child: Column(
+      //             children: [
+      //               Text(this.user),
+      //               Text(this.token),
+      //             ],
+      //           )),
+      //       Container(
+      //         width: 120,
+      //         height: 50,
+      //         child: OutlinedButton(
+      //             onPressed: () {
+      //               _logout();
+      //             },
+      //             child: Text(
+      //               "退出登录",
+      //               style: TextStyle(
+      //                   color: Colors.black,
+      //                   fontWeight: FontWeight.w400,
+      //                   fontSize: 17),
+      //             )),
+      //       ),
+      //     ],
+      //   ),
+      // );
     }
   }
 }
-
-
-

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:uphold/components/PhotoViewSimpleScreen.dart';
 import 'package:uphold/components/VenuesCardItem.dart';
 
 import '../Apply.dart';
@@ -96,16 +97,26 @@ class _GymDetailsState extends State<GymDetails> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(1)),
-                color: Colors.blue,
-                image: DecorationImage(
-                    //FileImage 本地图片   、NetworkImage 网络  、AssetImage资源
-                    image: NetworkImage("https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80"),
-                    fit: BoxFit.cover)),
-            height: 180,
-          ),
+         InkWell(
+           onTap: (){
+             Navigator.of(context).push(MaterialPageRoute(
+                 builder: (context) => PhotoViewSimpleScreen(
+                   heroTag: 'simple',
+                   imageProvider: NetworkImage("https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80"),
+
+                 )));
+           },
+           child:  Container(
+             decoration: BoxDecoration(
+                 borderRadius: BorderRadius.all(Radius.circular(1)),
+                 color: Colors.blue,
+                 image: DecorationImage(
+                   //FileImage 本地图片   、NetworkImage 网络  、AssetImage资源
+                     image: NetworkImage("https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80"),
+                     fit: BoxFit.cover)),
+             height: 180,
+           ),
+         ),
           Container(
             margin: EdgeInsets.fromLTRB(10, 5, 0, 0),
             child: Text(
@@ -148,17 +159,19 @@ class _GymDetailsState extends State<GymDetails> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                OutlinedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => Apply(
-
-                          )));
-                    },
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.blue.shade300)
-                    ),
-                    child: Text("办卡",style: TextStyle(color: Colors.white))),
+               Container(
+                 child:  OutlinedButton(
+                     onPressed: () {
+                       Navigator.of(context).push(MaterialPageRoute(
+                           builder: (context) => Apply(
+                           )));
+                     },
+                     style: ButtonStyle(
+                         backgroundColor: MaterialStateProperty.all(Colors.blue.shade300)
+                     ),
+                     child: Text("办卡",style: TextStyle(color: Colors.white))),
+                 margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+               )
               ],
             ),
           ),
