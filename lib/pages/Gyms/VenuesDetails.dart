@@ -191,17 +191,20 @@ class _VenuesDetailsState extends State<VenuesDetails> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                OutlinedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => Reservartion(
-                                title: ' ',
-                              )));
-                    },
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.blue.shade300)),
-                    child: Text("预约", style: TextStyle(color: Colors.white))),
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  child: OutlinedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Reservartion(
+                              title: ' ',
+                            )));
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                          MaterialStateProperty.all(Colors.blue.shade300)),
+                      child: Text("预约", style: TextStyle(color: Colors.white))),
+                )
               ],
             ),
           ),

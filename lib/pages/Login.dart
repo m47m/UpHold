@@ -15,20 +15,27 @@ class _LoginState extends State<Login> {
   String tel = "";
   String password = "";
   String API = "http://api.tongtu.xyz";
+  String API2 = "http://api.uphold.tongtu.xyz";
 
   _login() async {
     print("登录信息：tel："+tel+"password："+password);
-    var url = Uri.parse(API+"/user/login?username="+this.tel+"&password="+this.password);
-    var response = await http.post(url);
-    print('Response body: ${response.body}');
+    //var url = Uri.parse(API+"/user/login?username="+this.tel+"&password="+this.password);
+    var url2 = Uri.parse(API2+"/user/login");
 
+    Map data = {
+      'phone': this.tel,
+      'password': this.password,
+    };
+    var body = json.encode(data);
+    var response = await http.post(url2, headers: {"Content-Type": "application/json"},body: body);
+    print('Response body: ${response.body}');
     var responseJson = json.decode(response.body);
     Map<String, dynamic> PresonMsg = responseJson;
     var code = PresonMsg['code'];
-     if(code == 4){
+     if(code == 0){
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool("isLogin", true);
-      await prefs.setString("token", PresonMsg['data']['token']);
+      await prefs.setString("token", PresonMsg['data']);
       await prefs.setString("user", tel);
       Navigator.of(context).pushNamedAndRemoveUntil('/tabs', (Route<dynamic> route) => false);
       // Navigator.of(context).pop();

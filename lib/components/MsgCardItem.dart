@@ -34,9 +34,9 @@ class _MsgCardItemState extends State<MsgCardItem> {
           Text('${widget.bean.from}',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w300),maxLines: 1,overflow: TextOverflow.ellipsis,),
           Text('${widget.bean.description}'
               ,style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400),maxLines: 3,overflow: TextOverflow.ellipsis,),
-          // Divider(
-          //   thickness: 1,
-          // )
+          Divider(
+            thickness: 1,
+          )
           // Container(
           //   margin: EdgeInsets.all(5),
           //   height: 60,

@@ -31,10 +31,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
     _getData();
   }
-
   _getData() {
     //一个JSON格式的字符串
     String jsonStr =

@@ -68,7 +68,8 @@ class _TabsState extends State<Tabs> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavyBar(
+      bottomNavigationBar:
+      BottomNavyBar(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         containerHeight: 65,
         itemCornerRadius: 45,

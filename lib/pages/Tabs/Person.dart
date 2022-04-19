@@ -213,16 +213,19 @@ class _PersonPageState extends State<PersonPage> {
         ),
         Container(
           width: 350,
-          child:  Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width:320,
-                child: Text(this.saying) ,
-              )
-             
-            ],
-          ),
+          alignment: Alignment.center,
+          child:  Text(this.saying),
+          // child:  Row(
+          //   mainAxisSize: MainAxisSize.max,
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     // Container(
+          //     //   width:320,
+          //     //   child: Text(this.saying) ,
+          //     // )
+          //     Text(this.saying)
+          //   ],
+          // ),
         )
 
 
