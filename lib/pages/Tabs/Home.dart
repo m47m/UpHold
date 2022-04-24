@@ -97,7 +97,6 @@ class _HomePageState extends State<HomePage> {
                     Radius.circular(5),
                   ),
                 ),
-
                 ///设置内容内边距
                 contentPadding: EdgeInsets.only(
                   top: 0,

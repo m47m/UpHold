@@ -9,6 +9,7 @@ import 'package:uphold/pages/Persons/Collections.dart';
 import 'package:uphold/pages/Persons/Message.dart';
 import 'package:uphold/pages/Persons/MsgDetails.dart';
 import 'package:uphold/pages/Persons/Record.dart';
+import 'package:uphold/pages/Register.dart';
 import 'package:uphold/pages/Reservation.dart';
 import 'components/PhotoViewSimpleScreen.dart';
 import 'pages/Tabs.dart';
@@ -56,6 +57,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/tabs':(context)=>(Tabs()),
         '/login':(context)=>(Login()),
+        '/register':(context)=>(Register()),
         '/message':(context)=>(Message()),
         '/record':(context)=>(Record()),
         '/collections':(context)=>(Collections()),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uphold/pages/Register.dart';
 import 'dart:convert' ;
 import 'Tabs.dart';
 
@@ -57,7 +58,7 @@ class _LoginState extends State<Login> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              '欢迎来到UphOld',
+              '欢迎进入UphOld',
               style: TextStyle(color: Colors.black, fontSize: 20),
             ),
             SizedBox(
@@ -66,7 +67,7 @@ class _LoginState extends State<Login> {
             ),
             SizedBox(
               height: 80,
-              width: 320,
+              width: 340,
               child: TextField(
                 decoration: InputDecoration(
                     hintText: '请输入手机号',
@@ -89,7 +90,7 @@ class _LoginState extends State<Login> {
               ),
             ),
             SizedBox(
-              width: 320,
+              width: 340,
               child: TextField(
                 textInputAction: TextInputAction.go,
                 obscureText: true,
@@ -117,20 +118,49 @@ class _LoginState extends State<Login> {
               height: 60,
             ),
             Container(
-              width: 120,
+              width: 320,
               height: 50,
               child: OutlinedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blue.shade300),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                ),
                   onPressed: ()  {
                     _login();
                   },
                   child: Text(
                     "登录",
                     style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontWeight: FontWeight.w400,
-                        fontSize: 17),
+                        fontSize: 20),
                   )),
             ),
+            SizedBox(
+              height: 15,
+            ),
+
+            Container(
+              width: 320,
+              height: 50,
+              alignment: Alignment.center,
+              child: GestureDetector(
+                  child: Text("还没有账户，去注册",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w300,
+                        fontSize: 16),),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => Register()));
+                  }
+              ),
+            ),
+
           ],
         ),
       ),
