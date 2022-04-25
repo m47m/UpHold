@@ -25,7 +25,7 @@ class _RegisterState extends State<Register> {
   String tel = "";
   String password = "";
   String password2 = "";
-  String code = "";
+  String code = "123";
   String API = "http://api.uphold.tongtu.xyz";
 
   void _initTimer() {
@@ -44,12 +44,42 @@ class _RegisterState extends State<Register> {
     });
   }
 
+
+  Future<void> _sendVerificationCode() async {
+    print("注册信息：tel："+tel+"password："+password+"code："+ this.code);
+    var url = Uri.parse(API+"/user/code"+"?phone="+this.tel);
+    print(url.toString());
+
+   await http.get(url).then((http.Response response) {
+      //处理响应信息
+      if (response.statusCode == 200) {
+        print(response.body);
+        var responseJson = json.decode(response.body);
+        Map<String, dynamic> RegisterMsg = responseJson;
+        this.code = RegisterMsg['code'];
+      } else {
+        print('error');
+      }
+    }
+    );
+
+    // Map data = {
+    //   'phone': this.tel,
+    //   'password': this.password,
+    //   'code':this.code,
+    // };
+    // var body = json.encode(data);
+    // var response = await http.post(url, headers: {"Content-Type": "application/json"},body: body);
+    // print('Response body: ${response.body}');
+    // var responseJson = json.decode(response.body);
+  }
   void _buttonClickListen() {
     setState(() {
       if (isButtonEnable) {
         //当按钮可点击时
         isButtonEnable = false; //按钮状态标记
         _initTimer();
+
         return null; //返回null按钮禁止点击
       } else {
         //当按钮不可点击时
@@ -81,7 +111,14 @@ class _RegisterState extends State<Register> {
     var response = await http.post(url, headers: {"Content-Type": "application/json"},body: body);
     print('Response body: ${response.body}');
     var responseJson = json.decode(response.body);
-
+    Map<String, dynamic> RegisterMsg = responseJson;
+    var code = RegisterMsg['code'];
+    if(code == 0){
+      print("注册成功，请登录");
+      Navigator.of(context).pop();
+    }else{
+      print("注册失败");
+    }
   }
 
   @override
@@ -168,8 +205,8 @@ class _RegisterState extends State<Register> {
                 textInputAction: TextInputAction.go,
                 obscureText: true,
                 decoration: InputDecoration(
-                    hintText: '请输入密码',
-                    labelText: '密码',
+                    hintText: '请确认密码',
+                    labelText: '确认密码',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(
                         /// 里面的数值尽可能大才是左右半圆形，否则就是普通的圆角形
@@ -240,6 +277,7 @@ class _RegisterState extends State<Register> {
                           onPressed: () {
                             setState(() {
                               _buttonClickListen();
+                              _sendVerificationCode();
                             });
                           },
                           child: Text(

@@ -10,7 +10,8 @@ class MyGymBean {
   bool isCollect;
 
   MyGymBean(
-      {required this.title,
+      {
+        required this.title,
         required this.description,
         required this.isCollect});
 }

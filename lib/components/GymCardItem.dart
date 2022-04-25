@@ -7,7 +7,7 @@ class GardCardItem extends StatefulWidget {
   ///本Item对应的数据模型
   final TestBean bean;
 
-  GardCardItem({required this.bean,  required Key key}) : super(key: key);
+  GardCardItem({required this.bean,   Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {

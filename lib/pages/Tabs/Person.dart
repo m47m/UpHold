@@ -227,8 +227,6 @@ class _PersonPageState extends State<PersonPage> {
           //   ],
           // ),
         )
-
-
       ],
     );
   }
