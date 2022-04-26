@@ -54,7 +54,7 @@ class VenuesCardItem extends StatelessWidget {
                     width: 230,
                     height: 70,
                     child: Text(
-                      this.bean.description,
+                      "    场所描述：${this.bean.description}",
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(

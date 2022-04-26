@@ -5,9 +5,11 @@ import 'package:uphold/pages/Tabs/Home.dart';
 ///ListView 的子Item
 class GardCardItem extends StatefulWidget {
   ///本Item对应的数据模型
-  final TestBean bean;
+   final TestBean bean;
+  final GymBean temp;
 
-  GardCardItem({required this.bean,   Key? key}) : super(key: key);
+
+  GardCardItem({required this.bean,  required this.temp,  Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -23,6 +25,7 @@ class _ListItemState extends State<GardCardItem> {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => GymDetails(
               title: widget.bean.title,
+              DataBean: widget.temp,
             )));
       },
       child: Container(
@@ -74,7 +77,7 @@ Column buildColumn() {
                   width: 230,
                   height: 70,
                   child: Text(
-                    "${widget.bean.description}",
+                    "  描述：${widget.bean.description}",
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(

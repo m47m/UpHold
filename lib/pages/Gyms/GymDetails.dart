@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:uphold/components/PhotoViewSimpleScreen.dart';
 import 'package:uphold/components/VenuesCardItem.dart';
+import 'package:uphold/pages/Tabs/Home.dart';
 
 import '../Apply.dart';
 import 'VenuesDetails.dart';
@@ -19,14 +20,18 @@ class VenuesBean {
 
 class GymDetails extends StatefulWidget {
   String title = " ";
+  GymBean? DataBean ;
 
-  GymDetails({required this.title, Key? key}) : super(key: key);
+  GymDetails({required this.title, this.DataBean, Key? key}) : super(key: key);
 
   @override
-  _GymDetailsState createState() => _GymDetailsState(this.title);
+  _GymDetailsState createState() => _GymDetailsState(this.DataBean);
 }
 
 class _GymDetailsState extends State<GymDetails> {
+  _GymDetailsState(this.DataBean);
+
+  GymBean? DataBean ;
   String title = " ";
   List _list = [];
   ///测试数据集合
@@ -53,6 +58,15 @@ class _GymDetailsState extends State<GymDetails> {
       _testList.add(new VenuesBean(
           title: _list[i]["title"], description: _list[i]["description"]));
     }
+
+    for(int i = 0;i<DataBean!.gymAreas!.length;i++){
+    _testList.add(new VenuesBean(title: DataBean!.gymAreas![i].name, description: DataBean!.gymAreas![i].introduction));
+    }
+
+   if(DataBean != null){
+
+   }
+
   }
 
   buildListView() {
@@ -84,7 +98,6 @@ class _GymDetailsState extends State<GymDetails> {
       child: VenuesCardItem(
         ///子Item对应的数据
         bean: _testList[index],
-
         ///可选参数 子Item标识
         //key: GlobalObjectKey(index),
       ),
@@ -120,7 +133,7 @@ class _GymDetailsState extends State<GymDetails> {
           Container(
             margin: EdgeInsets.fromLTRB(10, 5, 0, 0),
             child: Text(
-              this.title,
+              this.DataBean!.name,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -138,7 +151,7 @@ class _GymDetailsState extends State<GymDetails> {
           Container(
             margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
             child: Text(
-              "健身房描述健身房描述健身房描述身房描述健身房身房描述健身房身房描述健述健身房描述",
+              "详情描述："+this.DataBean!.introduction,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
@@ -148,10 +161,9 @@ class _GymDetailsState extends State<GymDetails> {
           Container(
             margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
             child: Text(
-              "健身房地理位置健身房地理位置健身房地理位置",
+              "地理位置:"+"健身房地理位置健身房地理身房地理身房地理位置健身房地理位置",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+
             ),
           ),
 
@@ -181,7 +193,6 @@ class _GymDetailsState extends State<GymDetails> {
     );
   }
 
-  _GymDetailsState(this.title) {}
 
   @override
   Widget build(BuildContext context) {

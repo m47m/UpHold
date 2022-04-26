@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uphold/pages/Register.dart';
 import 'dart:convert' ;
 import 'Tabs.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -35,6 +37,16 @@ class _LoginState extends State<Login> {
     Map<String, dynamic> PresonMsg = responseJson;
     var code = PresonMsg['code'];
      if(code == 0){
+       Fluttertoast.showToast(
+           msg: "登录成功",
+           toastLength: Toast.LENGTH_SHORT,
+           gravity: ToastGravity.CENTER,
+           timeInSecForIosWeb: 1,
+           backgroundColor: Colors.blue,
+           textColor: Colors.white,
+           fontSize: 16.0
+       );
+
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool("isLogin", true);
       await prefs.setString("token", PresonMsg['data']);

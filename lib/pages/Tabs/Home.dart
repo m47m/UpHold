@@ -1,86 +1,18 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uphold/Utils/OverScrollBehavior.dart';
 import 'package:uphold/components/GymCardItem.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:dio/dio.dart';
 
-/*
-{
-	"code": 0,
-	"msg": "Success",
-	"data": [
-		{
-			"id": 1,
-			"name": "北邮健身房",
-			"introduction": "不来白不来",
-			"location": null,
-			"detailLocation": null,
-			"mainPhone": null,
-			"sparePhone": null,
-			"status": null,
-			"businessLicence": null,
-			"gymAreas": [
-				{
-					"id": 1,
-					"name": "健身区",
-					"introduction": "好地方"
-				}
-			]
-		}
-	]
-}
- */
-
-// class GymAreaBean {
-//   String id;
-//   String name;
-//   String introduction;
-//
-//   GymAreaBean(
-//       {required this.id, required this.name, required this.introduction});
-// }
-//
-// class GymBean {
-//   String id;
-//   String name;
-//   String introduction;
-//   String? location;
-//   String? detailLocation;
-//   String? mainPhone;
-//   String? sparePhone;
-//   String? status;
-//   String? businessLicence;
-//
-//   GymBean({
-//     required this.id,
-//     required this.name,
-//     required this.introduction,
-//   });
-//
-//   GymBean.fromJson(Map<String, dynamic> json)
-//       : name = json['name'],
-//         id = json['id'],
-//         introduction = json['introduction'];
-//
-//   Map<String, dynamic> toJson() => {
-//         'id': id,
-//         'name': name,
-//         'introduction': introduction,
-//         'location': location,
-//         'detailLocation': detailLocation,
-//         'mainPhone': mainPhone,
-//         'sparePhone': sparePhone,
-//         'status': status,
-//         'businessLicence': businessLicence,
-//       };
-// }
-
 
 class GymBean {
-  int? id;
+  late int id;
   String name;
   String introduction;
   String? location;
@@ -93,7 +25,7 @@ class GymBean {
   List<MembershipCards>? membershipCards;
 
   GymBean(
-      {this.id,
+      { required this.id,
         required this.name,
         required this.introduction,
         this.location,
@@ -102,13 +34,11 @@ class GymBean {
         this.sparePhone,
         this.status,
         this.businessLicence,
-        this.gymAreas,
+        required this.gymAreas,
         this.membershipCards});
 
-  GymBean.fromJson(Map<String, dynamic> json) : introduction = json['introduction'],name = json['name']{
-    id = json['id'];
-    name = json['name'];
-    introduction = json['introduction'];
+  GymBean.fromJson(Map<String, dynamic> json) :id = json['id'], introduction = json['introduction'],
+        name = json['name']{
     location = json['location'];
     detailLocation = json['detailLocation'];
     mainPhone = json['mainPhone'];
@@ -140,9 +70,12 @@ class GymBean {
     data['sparePhone'] = this.sparePhone;
     data['status'] = this.status;
     data['businessLicence'] = this.businessLicence;
-    if (this.gymAreas != null) {
+
+    if(this.gymAreas != null){
       data['gymAreas'] = this.gymAreas!.map((v) => v.toJson()).toList();
     }
+
+
     if (this.membershipCards != null) {
       data['membershipCards'] =
           this.membershipCards!.map((v) => v.toJson()).toList();
@@ -152,16 +85,16 @@ class GymBean {
 }
 
 class GymAreas {
-  int? id;
-  String? name;
-  String? introduction;
+  int id;
+  String name;
+  String introduction;
 
-  GymAreas({this.id, this.name, this.introduction});
+  GymAreas({required this.id, required this.name,required  this.introduction});
 
-  GymAreas.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    introduction = json['introduction'];
+  GymAreas.fromJson(Map<String, dynamic> json):id = json['id'],
+  name = json['name'],
+  introduction = json['introduction'] {
+
   }
 
   Map<String, dynamic> toJson() {
@@ -232,15 +165,45 @@ class _HomePageState extends State<HomePage> {
 
   String API = "http://api.uphold.tongtu.xyz";
 
+  int _page = 1; //加载的页数
+
+  bool isLoading = false; //是否正在加载数据
+
+  //Future<String> _myString;
+
+  var _futureBuilderFuture;
+
+  RefreshController _refreshController =
+  RefreshController(initialRefresh: false);
+  void _onRefresh() async{
+    // monitor network fetch
+     await Future.delayed(Duration(milliseconds: 1000));
+     setState(() {
+       this._initListData();
+     });
+
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async{
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 300));
+    // if failed,use loadFailed(),if no data return,use LoadNodata()
+    this._getData();
+    if(mounted)
+      setState(() {
+      });
+    _refreshController.loadComplete();
+  }
+
   @override
   void initState() {
+    _futureBuilderFuture = _initListData();
     super.initState();
-
   }
 
   _getData() {
-
-
     //一个JSON格式的字符串
     String jsonStr =
         '[{"title":"健身房名称0","description":"健身房描述健身房描述健身房描述健身房房描述健身房描述健描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"1"},'
@@ -251,7 +214,6 @@ class _HomePageState extends State<HomePage> {
         '{"title":"健身房名称5","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"1"}]';
     //将JSON字符串转为List
     _list = json.decode(jsonStr);
-
     for (int i = 0; i < _list.length; i++) {
       _testList.add(new TestBean(
           title: _list[i]["title"],
@@ -260,9 +222,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  _initListData() async {
-    this._testList.clear();
-    this._getData();
+  Future  _initListData() async {
+
+     //this._getData();
     final prefs = await SharedPreferences.getInstance();
     String? _token = prefs.getString("token");
     if (_token != null) {
@@ -270,23 +232,29 @@ class _HomePageState extends State<HomePage> {
     }
 
     var dio = Dio();
-
     final response = await dio.get(
       API + "/gym/list?page=0&size=10",
       options: Options(headers: {
         "Auth": this.token,
-      }),
-    );
+      }));
 
     if (response.statusCode == 200) {
-      var GymMsg= jsonDecode(response.toString());
-      var tempGym = GymBean.fromJson(GymMsg['data'][0]);
-      print("tempGym: ${tempGym.introduction}");
-      _testList.add(
-          TestBean(
-          title: tempGym.name,
-          description: tempGym.introduction,
-          isCollect: false));
+      this._testList.clear();
+      this._gymList.clear();
+      var msg= jsonDecode(response.toString());
+      List GymMsg = msg['data'];
+     // List<GymBean> GymList = GymMsg.map((e) => new GymBean.fromJson(e)).toList();
+
+      _gymList = GymMsg.map((e) => new GymBean.fromJson(e)).toList();
+
+      for(var i in _gymList){
+        _testList.add(
+            TestBean(
+            title: i.name,
+            description: i.introduction,
+            isCollect: false)
+        );
+      }
     }
   }
 
@@ -301,14 +269,15 @@ class _HomePageState extends State<HomePage> {
         return GardCardItem(
           ///子Item对应的数据
           bean: _testList[index],
-
+          temp: _gymList[0],
           ///可选参数 子Item标识
           // key: GlobalObjectKey(index),
         );
       },
-
       ///ListView子Item的个数
       itemCount: _testList.length,
+
+      //controller: _scrollController,
     );
   }
 
@@ -353,12 +322,14 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+
       body: FutureBuilder(
-        future: this._initListData(),
+        future: _futureBuilderFuture,
         builder: _buildFuture,
       ),
     );
   }
+
 
   Widget _buildFuture(BuildContext context, AsyncSnapshot snapshot) {
     switch (snapshot.connectionState) {
@@ -376,7 +347,41 @@ class _HomePageState extends State<HomePage> {
       case ConnectionState.done:
         print('done');
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-        return this.buildListView();
+        return
+          ScrollConfiguration(behavior: OverScrollBehavior(), child: SmartRefresher(
+            enablePullDown: true,
+            enablePullUp: true,
+            //header: WaterDropMaterialHeader(backgroundColor:Colors.blueAccent),
+            header: MaterialClassicHeader(),
+            footer: CustomFooter(
+              builder: (BuildContext context,LoadStatus? mode){
+                Widget body ;
+                if(mode==LoadStatus.idle){
+                  body =  Text("上拉加载");
+                }
+                else if(mode==LoadStatus.loading){
+                  body =  CupertinoActivityIndicator();
+                }
+                else if(mode == LoadStatus.failed){
+                  body = Text("加载失败！点击重试！");
+                }
+                else if(mode == LoadStatus.canLoading){
+                  body = Text("松手,加载更多!");
+                }
+                else{
+                  body = Text("没有更多数据了!");
+                }
+                return Container(
+                  height: 55.0,
+                  child: Center(child:body),
+                );
+              },
+            ),
+            controller: _refreshController,
+            onRefresh: _onRefresh,
+            onLoading: _onLoading,
+            child: this.buildListView(),
+          ));
     }
   }
 }

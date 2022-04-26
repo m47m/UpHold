@@ -57,7 +57,7 @@ class _MyOrderState extends State<MyOrder> {
     return Scaffold(
       appBar: AppBar(
           titleSpacing: 0,  //清除title左右padding，默认情况下会有一定的padding距离
-          toolbarHeight: 75, //将高度定到44，设计稿的高度。为了方便适配，
+          toolbarHeight: 55, //将高度定到44，设计稿的高度。为了方便适配，
           //推荐使用插件flutter_screenutil做屏幕的适配工作
           backgroundColor: Colors.white,
           elevation: 1,
