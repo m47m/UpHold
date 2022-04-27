@@ -63,9 +63,9 @@ class _GymDetailsState extends State<GymDetails> {
     _testList.add(new VenuesBean(title: DataBean!.gymAreas![i].name, description: DataBean!.gymAreas![i].introduction));
     }
 
-   if(DataBean != null){
-
-   }
+   // if(DataBean != null){
+   //
+   // }
 
   }
 
@@ -98,6 +98,8 @@ class _GymDetailsState extends State<GymDetails> {
       child: VenuesCardItem(
         ///子Item对应的数据
         bean: _testList[index],
+        temp: this.DataBean,
+        AreaIndex: index,
         ///可选参数 子Item标识
         //key: GlobalObjectKey(index),
       ),

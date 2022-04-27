@@ -5,6 +5,7 @@ import 'package:uphold/components/EquipmentItem.dart';
 import 'package:uphold/components/PhotoViewSimpleScreen.dart';
 import 'package:uphold/pages/Reservation.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:uphold/pages/Tabs/Home.dart';
 
 
 class EquipmentBean {
@@ -21,17 +22,21 @@ class EquipmentBean {
 
 class VenuesDetails extends StatefulWidget {
   String title = " ";
+  GymBean? DataBean ;
+  int? AreaIndex;
 
-  VenuesDetails({required this.title, Key? key}) : super(key: key);
+  VenuesDetails({required this.title, this.DataBean,this.AreaIndex,Key? key}) : super(key: key);
 
   @override
-  _VenuesDetailsState createState() => _VenuesDetailsState(this.title);
+  _VenuesDetailsState createState() => _VenuesDetailsState(this.title,this.DataBean,this.AreaIndex,);
 }
 
 class _VenuesDetailsState extends State<VenuesDetails> {
   String title = " ";
+  GymBean? DataBean ;
+  int? AreaIndex;
 
-  _VenuesDetailsState(this.title) {}
+  _VenuesDetailsState(this.title,this.DataBean,this.AreaIndex) {}
 
   List _list = [];
 
@@ -129,8 +134,6 @@ class _VenuesDetailsState extends State<VenuesDetails> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-
           InkWell(
             onTap: (){
               Navigator.of(context).push(MaterialPageRoute(
@@ -154,7 +157,7 @@ class _VenuesDetailsState extends State<VenuesDetails> {
           Container(
             margin: EdgeInsets.fromLTRB(10, 5, 0, 0),
             child: Text(
-              this.title,
+              this.DataBean!.gymAreas![this.AreaIndex!].name,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -172,7 +175,7 @@ class _VenuesDetailsState extends State<VenuesDetails> {
           Container(
             margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
             child: Text(
-              "场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述",
+              "场所描述："+this.DataBean!.gymAreas![this.AreaIndex!].introduction,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
@@ -198,6 +201,7 @@ class _VenuesDetailsState extends State<VenuesDetails> {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => Reservartion(
                               title: ' ',
+                              GymId: this.DataBean!.id.toString(),
                             )));
                       },
                       style: ButtonStyle(

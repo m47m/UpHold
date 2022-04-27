@@ -92,6 +92,7 @@ class _ListItemState extends State<MyGymCardItem> {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => Reservartion(
                               title: widget.bean.title,
+                              GymId: "1",
                             )));
                       },
                       style: ButtonStyle(

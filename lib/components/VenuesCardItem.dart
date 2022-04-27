@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:uphold/pages/Gyms/GymDetails.dart';
 import 'package:uphold/pages/Gyms/VenuesDetails.dart';
 import 'package:uphold/pages/Reservation.dart';
+import 'package:uphold/pages/Tabs/Home.dart';
 
 class VenuesCardItem extends StatelessWidget {
   final VenuesBean bean;
+  final GymBean? temp;
+  final int AreaIndex;
 
-  VenuesCardItem({required this.bean, Key? key}) : super(key: key);
+  VenuesCardItem({required this.bean, required this.temp,required this.AreaIndex, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +79,8 @@ class VenuesCardItem extends StatelessWidget {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => VenuesDetails(
                                   title: this.bean.title,
+                                  DataBean: this.temp,
+                                  AreaIndex: 0,
                                 )));
                           },
                           style: ButtonStyle(
@@ -94,6 +99,7 @@ class VenuesCardItem extends StatelessWidget {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => Reservartion(
                                   title: this.bean.title,
+                                  GymId: this.temp!.id.toString(),
                                 )));
                           },
                           style: ButtonStyle(

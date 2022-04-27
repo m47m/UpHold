@@ -5,7 +5,7 @@ import 'package:uphold/pages/Tabs/Home.dart';
 ///ListView 的子Item
 class GardCardItem extends StatefulWidget {
   ///本Item对应的数据模型
-   final TestBean bean;
+  final TestBean bean;
   final GymBean temp;
 
 
@@ -145,7 +145,6 @@ Row buildRow() {
 
       ///收藏按钮
       OutlinedButton(
-
         ///按钮的背景
         //color: widget.bean.isCollect ? Colors.blue : Colors.grey[200],
         ///点击更新当前 Item 数据以及刷新页面显示
