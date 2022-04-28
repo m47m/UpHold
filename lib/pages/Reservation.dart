@@ -91,7 +91,6 @@ class dData {
   List<String> area;
   HashMap<String, List<Period>>? map;
   dData(this.area, this.map);
-
 }
 
 class Reservartion extends StatefulWidget {
@@ -150,10 +149,10 @@ class _ReservartionState extends State<Reservartion> {
   // String ReservationId = "";
 
 
-  // //地点 ---> 日期 数组
-  // HashMap<String,List<String>>? _map1;
+  //地点 ---> 日期 数组
+  HashMap<String,List<String>>? _map1 = new HashMap();
   // //日期 -----> (地点 and 时间段) 数组
-  // HashMap<String,List<dData>>? _map2;
+  HashMap<String,dData>? _map2 = new HashMap();
 
   @override
   void initState() {
@@ -173,8 +172,6 @@ class _ReservartionState extends State<Reservartion> {
         options: Options(headers: {
           "Auth": _token,
         }));
-
-
     if (response.statusCode == 200){
       var msg= jsonDecode(response.toString());
       List AppointmentMsg = msg['data'];
@@ -182,7 +179,56 @@ class _ReservartionState extends State<Reservartion> {
     }
 
     for(var i in AppointmentList){
-     print(i.startTime);
+
+     var startTime = DateTime.fromMillisecondsSinceEpoch(i.startTime!);
+     var endTime = DateTime.fromMillisecondsSinceEpoch(i.endTime!);
+     var area = i.gymArea!.name;
+     var date = startTime.toString().substring(0,10);
+     print("area:"+area);
+     print("date:"+date);
+     print("startTime:"+startTime.toString().substring(11,16));
+     print("endTime:"+endTime.toString().substring(11,16));
+     Period period = new Period(startTime.toString().substring(11,16), endTime.toString().substring(11,16), i.id!.toString());
+     //_map1!.putIfAbsent(area, () => ({startTime.toString().substring(0,10)}.toList()));
+
+
+     //map1 构造
+     if(_map1!.containsKey(area)){
+       _map1![area]!.add(startTime.toString().substring(0,10));
+     }else{
+       _map1!.putIfAbsent(area, () => ({startTime.toString().substring(0,10)}.toList()));
+     }
+     
+     //map2 构造
+     if(_map2!.containsKey(date)){
+       _map2![date]!.area.add(area);
+       if(_map2![date]!.map!.containsKey(area)){
+         _map2![date]!.map![area]!.add(new Period(startTime.toString().substring(11,16), endTime.toString().substring(11,16), i.id.toString()));
+       }else{
+         _map2![date]!.map!.
+         putIfAbsent(
+             area, () => {new Period(startTime.toString().substring(11,16),
+                     endTime.toString().substring(11,16), i.id.toString())}.toList()
+         );
+       }
+       
+     }else{
+       List<String> _area = [];
+       _area.add(area);
+
+       List<Period> _period = [];
+       _period.add(new Period(startTime.toString().substring(11,16), endTime.toString().substring(11,16), i.id.toString()));
+
+       HashMap<String,List<Period>> _map = new HashMap();
+       _map.putIfAbsent(area, () => _period);
+       
+       // List<dData> _dData = [];
+       // _dData.add(new dData(_area, _map));
+
+       _map2!.putIfAbsent(date, () =>new dData(_area, _map));
+     }
+
+
     }
 
 
