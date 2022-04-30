@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uphold/Utils/SpUtils.dart';
 import 'package:uphold/pages/Apply.dart';
@@ -56,13 +57,14 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home:  Tabs(),
+      builder: EasyLoading.init(),
       routes: {
         '/tabs':(context)=>(Tabs()),
         '/login':(context)=>(Login()),
         '/register':(context)=>(Register()),
         '/message':(context)=>(Message()),
         '/record':(context)=>(Record()),
-        '/collections':(context)=>(Collections()),
+        '/collections':(context)=>(Collections(collection: [],)),
         '/details':(context)=>(GymDetails(title: '',)),
         '/reservartion':(context)=>(Reservartion(title:'', GymId: '', introduction: '',)),
         '/venuesdetails':(context)=>(VenuesDetails(title: ' ',)),

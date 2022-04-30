@@ -12,6 +12,9 @@ import 'package:http/http.dart' as http;
 
 import '../../main.dart';
 import '../Login.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+import 'Home.dart';
 
 class PersonMsg {
   int? id;
@@ -114,6 +117,8 @@ class _PersonPageState extends State<PersonPage> {
   String API = "http://api.uphold.tongtu.xyz";
   String saying = "多少事，从来急，天地转，光阴迫，一万年太久，只争朝夕。";
   String sayingApi = "https://v1.hitokoto.cn/?c=k";
+  //收藏健身房数组
+  List<GymBean> CollectionList = [];
 
   var _futureBuilderFuture;
 
@@ -151,6 +156,10 @@ class _PersonPageState extends State<PersonPage> {
       var person = PersonMsg.fromJson(_PersonMsg['data']);
       this.user = person.nickname;
       this.tel = person.phone;
+
+      List collection = _PersonMsg['data']['collection'];
+
+      CollectionList =  collection.map((e) => new GymBean.fromJson(e)).toList();
     }
 
     // var url = Uri.parse(this.sayingApi);
@@ -227,7 +236,6 @@ class _PersonPageState extends State<PersonPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-
                 GestureDetector(
                   child: ListTile(
                     leading: Container(
@@ -276,7 +284,7 @@ class _PersonPageState extends State<PersonPage> {
                         onTap: (){
                                   print("我的收藏");
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => Collections()));
+                                      builder: (context) => Collections(collection: this.CollectionList,)));
                         },
                           child: Column(
                             children: [
@@ -310,6 +318,7 @@ class _PersonPageState extends State<PersonPage> {
                               print("我的消息");
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => Message()));
+
                             },
                             child: Column(
                               children: [
@@ -373,11 +382,15 @@ class _PersonPageState extends State<PersonPage> {
         return Text('ConnectionState.active');
       case ConnectionState.waiting:
         print('waiting');
+        EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.cubeGrid;
+        EasyLoading.instance.loadingStyle = EasyLoadingStyle.dark;
+        EasyLoading.show(status: 'loading...',);
         return Center(
-          child: CircularProgressIndicator(),
+          //child: CircularProgressIndicator(),
         );
       case ConnectionState.done:
         print('done');
+        EasyLoading.dismiss();
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
         return PersonCard();
       // return Container(

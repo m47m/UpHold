@@ -149,6 +149,7 @@ Row buildRow() {
         //color: widget.bean.isCollect ? Colors.blue : Colors.grey[200],
         ///点击更新当前 Item 数据以及刷新页面显示
         onPressed: () {
+
           setState(() {
             widget.bean.isCollect = !widget.bean.isCollect;
           });

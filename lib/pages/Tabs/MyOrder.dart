@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:uphold/components/OrderCardItem.dart';
 
 
@@ -30,12 +31,17 @@ class _MyOrderState extends State<MyOrder> {
 
   List _list = [];
   List<OrderBean> _orderList = [];
+  var _futureBuilderFuture;
 
   @override
   void initState() {
     super.initState();
-
+    this._futureBuilderFuture = initRegisters();
     _getData();
+  }
+
+  Future initRegisters() async{
+
   }
 
   _getData(){
@@ -66,7 +72,11 @@ class _MyOrderState extends State<MyOrder> {
           //由于title本身是接受一个widget，所以可以直接给他一个自定义的widget。
           title: new Text('ORDER' ,style: TextStyle(color: Colors.black),)
       ),
-      body: this.buildListView(),
+     // body: this.buildListView(),
+      body: FutureBuilder(
+        future: _futureBuilderFuture,
+        builder: _buildFuture,
+      ),
     );
   }
 
@@ -85,4 +95,29 @@ class _MyOrderState extends State<MyOrder> {
       itemCount: this._orderList.length ,
     );
   }
+
+  Widget _buildFuture(BuildContext context, AsyncSnapshot snapshot) {
+    switch (snapshot.connectionState) {
+      case ConnectionState.none:
+        print('还没有开始网络请求');
+        return Text('还没有开始网络请求');
+      case ConnectionState.active:
+        print('active');
+        return Text('ConnectionState.active');
+      case ConnectionState.waiting:
+        print('waiting');
+        EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.cubeGrid;
+        EasyLoading.instance.loadingStyle = EasyLoadingStyle.dark;
+        EasyLoading.show(status: 'loading...',);
+        return Center(
+          //child: CircularProgressIndicator(),
+        );
+      case ConnectionState.done:
+        print('done');
+        EasyLoading.dismiss();
+        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+        return Container(child: this.buildListView());
+    }
+  }
+
 }

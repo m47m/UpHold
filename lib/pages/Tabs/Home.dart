@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uphold/Utils/OverScrollBehavior.dart';
@@ -342,11 +343,15 @@ class _HomePageState extends State<HomePage> {
         return Text('ConnectionState.active');
       case ConnectionState.waiting:
         print('waiting');
+        EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.cubeGrid;
+        EasyLoading.instance.loadingStyle = EasyLoadingStyle.dark;
+        EasyLoading.show(status: 'loading...',);
         return Center(
-          child: CircularProgressIndicator(),
+          //child: CircularProgressIndicator(),
         );
       case ConnectionState.done:
         print('done');
+        EasyLoading.dismiss();
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
         return
           ScrollConfiguration(behavior: OverScrollBehavior(), child: SmartRefresher(

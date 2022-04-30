@@ -1,4 +1,5 @@
 //import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uphold/pages/Tabs/MyGym.dart';
@@ -19,6 +20,12 @@ class _TabsState extends State<Tabs> {
 
   int _currentIndex = 0;
   PageController _pageController = PageController();
+  List _pageList = [
+    HomePage(),
+    MyGym(),
+    MyOrder(),
+    PersonPage(),
+  ];
 
   _checkLogin() async {
     // Obtain shared preferences.
@@ -53,65 +60,80 @@ class _TabsState extends State<Tabs> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SizedBox.expand(
-        child: PageView(
-          controller: _pageController,
-          onPageChanged: (index) {
-            setState(() => _currentIndex = index);
-          },
-          children: <Widget>[
-            HomePage(),
-            MyGym(),
-            MyOrder(),
-            PersonPage(),
-          ],
-        ),
-      ),
-      bottomNavigationBar:
-      BottomNavyBar(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        containerHeight: 65,
-        itemCornerRadius: 45,
-        iconSize: 27,
-        curve: Curves.ease,
-        selectedIndex: _currentIndex,
-        onItemSelected: (index) {
-          setState(() => _currentIndex = index);
-           _pageController.jumpToPage(index);
-          // _pageController.animateToPage(index,
-          //     duration: Duration(milliseconds: 800), curve: Curves.ease);
 
-        },
-        items: <BottomNavyBarItem>[
-          BottomNavyBarItem(
-            icon: Icon(Icons.home),
-            title: Text('首页',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400),),
-            textAlign: TextAlign.center,
-            inactiveColor: Colors.black54,
-            activeColor: Colors.blueAccent,
-          ),
-          BottomNavyBarItem(
-              icon: Icon(Icons.accessible_forward),
-              textAlign: TextAlign.center,
-              title: Text('健身',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400),),
-              inactiveColor: Colors.black54,
-              activeColor: Colors.blueAccent,
-          ),
-          BottomNavyBarItem(
-              icon: Icon(Icons.account_balance_wallet),
-              textAlign: TextAlign.center,
-              title: Text('预约',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400),),
-              inactiveColor: Colors.black54,
-              activeColor: Colors.blueAccent),
-          BottomNavyBarItem(
-              icon: Icon(Icons.person),
-              textAlign: TextAlign.center,
-              title: Text('个人',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400),),
-              inactiveColor: Colors.black54,
-              activeColor: Colors.blueAccent),
+    return Scaffold(
+      // body: SizedBox.expand(
+      //   child: PageView(
+      //     controller: _pageController,
+      //     onPageChanged: (index) {
+      //       setState(() => _currentIndex = index);
+      //     },
+      //     children: <Widget>[
+      //       HomePage(),
+      //       MyGym(),
+      //       MyOrder(),
+      //       PersonPage(),
+      //     ],
+      //   ),
+      // ),
+      body: this._pageList[this._currentIndex],
+      bottomNavigationBar:
+      CurvedNavigationBar(
+        backgroundColor: Colors.blueAccent,
+        items: <Widget>[
+          Icon(Icons.home, size: 30),
+          Icon(Icons.accessible_forward, size: 30),
+          Icon(Icons.account_balance_wallet, size: 30),
+          Icon(Icons.person,size:30)
         ],
+        onTap: (index) {
+          //Handle button tap
+          setState(() => _currentIndex = index);
+        },
       ),
+      // BottomNavyBar(
+      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //   containerHeight: 65,
+      //   itemCornerRadius: 45,
+      //   iconSize: 27,
+      //   curve: Curves.ease,
+      //   selectedIndex: _currentIndex,
+      //   onItemSelected: (index) {
+      //     setState(() => _currentIndex = index);
+      //      _pageController.jumpToPage(index);
+      //     // _pageController.animateToPage(index,
+      //     //     duration: Duration(milliseconds: 800), curve: Curves.ease);
+      //
+      //   },
+      //   items: <BottomNavyBarItem>[
+      //     BottomNavyBarItem(
+      //       icon: Icon(Icons.home),
+      //       title: Text('首页',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400),),
+      //       textAlign: TextAlign.center,
+      //       inactiveColor: Colors.black54,
+      //       activeColor: Colors.blueAccent,
+      //     ),
+      //     BottomNavyBarItem(
+      //         icon: Icon(Icons.accessible_forward),
+      //         textAlign: TextAlign.center,
+      //         title: Text('健身',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400),),
+      //         inactiveColor: Colors.black54,
+      //         activeColor: Colors.blueAccent,
+      //     ),
+      //     BottomNavyBarItem(
+      //         icon: Icon(Icons.account_balance_wallet),
+      //         textAlign: TextAlign.center,
+      //         title: Text('预约',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400),),
+      //         inactiveColor: Colors.black54,
+      //         activeColor: Colors.blueAccent),
+      //     BottomNavyBarItem(
+      //         icon: Icon(Icons.person),
+      //         textAlign: TextAlign.center,
+      //         title: Text('个人',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400),),
+      //         inactiveColor: Colors.black54,
+      //         activeColor: Colors.blueAccent),
+      //   ],
+      // ),
     );
   }
 }
