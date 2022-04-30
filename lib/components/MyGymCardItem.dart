@@ -93,6 +93,7 @@ class _ListItemState extends State<MyGymCardItem> {
                             builder: (context) => Reservartion(
                               title: widget.bean.title,
                               GymId: "1",
+                              introduction: widget.bean.description,
                             )));
                       },
                       style: ButtonStyle(

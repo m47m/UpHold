@@ -98,8 +98,9 @@ class VenuesCardItem extends StatelessWidget {
                           onPressed: (){
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => Reservartion(
-                                  title: this.bean.title,
+                                  title: this.temp!.name,
                                   GymId: this.temp!.id.toString(),
+                                  introduction: this.temp!.introduction,
                                 )));
                           },
                           style: ButtonStyle(

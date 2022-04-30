@@ -200,7 +200,8 @@ class _VenuesDetailsState extends State<VenuesDetails> {
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => Reservartion(
-                              title: ' ',
+                              title: this.title,
+                              introduction: this.DataBean!.gymAreas![this.AreaIndex!].introduction,
                               GymId: this.DataBean!.id.toString(),
                             )));
                       },

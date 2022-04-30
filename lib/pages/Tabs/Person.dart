@@ -227,37 +227,38 @@ class _PersonPageState extends State<PersonPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                InkWell(
+
+                GestureDetector(
                   child: ListTile(
-                  leading: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(3)),
-                        color: Colors.blue,
-                        image: DecorationImage(
-                          //FileImage 本地图片   、NetworkImage 网络  、AssetImage资源
-                            image: AssetImage('images/a.jpg'),
-                            fit: BoxFit.cover)),
-                    width: 65,
-                    height: 75,
+                    leading: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(3)),
+                          color: Colors.blue,
+                          image: DecorationImage(
+                            //FileImage 本地图片   、NetworkImage 网络  、AssetImage资源
+                              image: AssetImage('images/a.jpg'),
+                              fit: BoxFit.cover)),
+                      width: 65,
+                      height: 75,
+                    ),
+                    title: Text('用户名：' + '${this.user}'),
+                    subtitle: Text('手机号：${this.tel}'),
+                    trailing: Container(
+                      width: 100,
+                      height: 40,
+                      child: OutlinedButton(
+                          onPressed: () {
+                            _logout();
+                          },
+                          child: Text(
+                            "退出登录",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 17),
+                          )),
+                    ),
                   ),
-                  title: Text('用户名：' + '${this.user}'),
-                  subtitle: Text('手机号：${this.tel}'),
-                  trailing: Container(
-                    width: 100,
-                    height: 40,
-                    child: OutlinedButton(
-                        onPressed: () {
-                          _logout();
-                        },
-                        child: Text(
-                          "退出登录",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 17),
-                        )),
-                  ),
-                ),
                   onTap: (){
                     print("个人详细资料");
                     Navigator.of(context).push(MaterialPageRoute(
@@ -270,22 +271,23 @@ class _PersonPageState extends State<PersonPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Container(
-                        child: InkWell(
-                            onTap: () {
-                              print("我的收藏");
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Collections()));
-                            },
-                            child: Column(
-                              children: [
-                                Icon(Icons.collections),
-                                Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
-                                Text("我的收藏")
-                              ],
-                            )),
+
+                      GestureDetector(
+                        onTap: (){
+                                  print("我的收藏");
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => Collections()));
+                        },
+                          child: Column(
+                            children: [
+                              Icon(Icons.collections),
+                              Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
+                              Text("我的收藏")
+                            ],
+                          )
                       ),
+
                       Container(
                         child: InkWell(
                             onTap: () {
@@ -342,22 +344,21 @@ class _PersonPageState extends State<PersonPage> {
         SizedBox(
           height: 80,
         ),
-        Container(
-          width: 350,
-          alignment: Alignment.center,
-          child: Text(this.saying),
-          // child:  Row(
-          //   mainAxisSize: MainAxisSize.max,
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     // Container(
-          //     //   width:320,
-          //     //   child: Text(this.saying) ,
-          //     // )
-          //     Text(this.saying)
-          //   ],
-          // ),
+
+        GestureDetector(
+          child: Container(
+            width: 350,
+            alignment: Alignment.center,
+            child: Text(this.saying),
+          ),
+          onTap: (){
+            this._initSaying();
+            setState(() {
+
+            });
+          },
         )
+
       ],
     );
   }
