@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:uphold/pages/Gyms/GymDetails.dart';
 import 'package:uphold/pages/Reservation.dart';
+import 'package:uphold/pages/Tabs/Home.dart';
 import 'package:uphold/pages/Tabs/MyGym.dart';
 
 ///ListView 的子Item
 class MyGymCardItem extends StatefulWidget {
   ///本Item对应的数据模型
-  final MyGymBean bean;
 
-  MyGymCardItem({required this.bean,  Key? key}) : super(key: key);
+  GymBean temp;
+
+  MyGymCardItem({required this.temp,Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -23,7 +25,8 @@ class _ListItemState extends State<MyGymCardItem> {
       onTap: (){
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => GymDetails(
-              title: widget.bean.title,
+              title: widget.temp.name,
+              //title: widget.bean.title,
             )));
       },
       child: Container(
@@ -43,7 +46,7 @@ class _ListItemState extends State<MyGymCardItem> {
       children: [
         Container(
           child: Text(
-            "${widget.bean.title}",
+            "${widget.temp.name}",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
           margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
@@ -73,7 +76,7 @@ class _ListItemState extends State<MyGymCardItem> {
                     width: 245,
                     height: 70,
                     child: Text(
-                      "${widget.bean.description}",
+                      "${widget.temp.introduction}",
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -91,9 +94,9 @@ class _ListItemState extends State<MyGymCardItem> {
                       onPressed: (){
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => Reservartion(
-                              title: widget.bean.title,
-                              GymId: "1",
-                              introduction: widget.bean.description,
+                              title: widget.temp.name,
+                              GymId: widget.temp.id.toString(),
+                              introduction: widget.temp.introduction,
                             )));
                       },
                       style: ButtonStyle(
@@ -103,8 +106,6 @@ class _ListItemState extends State<MyGymCardItem> {
                     ),
 
                   ),
-
-
                 ],
               )
             ],
@@ -113,37 +114,5 @@ class _ListItemState extends State<MyGymCardItem> {
       ],
     );
   }
-
-  ///内容区域
-  Row buildRow() {
-    ///左右线性排开
-    return Row(
-      children: [
-
-        ///权重布局 文本占用空白区域
-        Expanded(
-            child: Text(
-              "${widget.bean.title}",
-            )),
-
-        ///收藏按钮
-        OutlinedButton(
-
-          ///按钮的背景
-          //color: widget.bean.isCollect ? Colors.blue : Colors.grey[200],
-          ///点击更新当前 Item 数据以及刷新页面显示
-          onPressed: () {
-            setState(() {
-              widget.bean.isCollect = !widget.bean.isCollect;
-            });
-          },
-          child: Text(
-            "${widget.bean.isCollect ? '已收藏' : '收藏'}",
-            style: TextStyle(
-                color: widget.bean.isCollect ? Colors.white : Colors.red),
-          ),
-        ),
-      ],
-    );
-  }}
+}
 

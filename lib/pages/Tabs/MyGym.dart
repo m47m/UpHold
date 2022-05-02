@@ -86,6 +86,7 @@ class MyGym extends StatefulWidget {
 class _MyGymState extends State<MyGym> {
   List _list = [];
   List<MembershipRegisters> Registers = [];
+  List<GymBean> MyGymList = [];
 
   ///测试数据集合
   List<MyGymBean> _testList = [];
@@ -119,28 +120,50 @@ class _MyGymState extends State<MyGym> {
       Registers = register.map((e) => new MembershipRegisters.fromJson(e)).toList();
     }
 
-    print(Registers[0].membershipCard!.name);
+    //print(Registers[0].membershipCard!.gym);
+
+    for(var i in Registers){
+      print(i.membershipCard!.gym);
+
+      var response = await dio.get(
+          API + "/gym/info?id="+i.membershipCard!.gym.toString(),
+          options: Options(headers: {
+            "Auth": _token,
+          }));
+
+      if(response.statusCode == 200){
+        var _GymMsg = json.decode(response.toString());
+        GymBean gymBean = GymBean.fromJson(_GymMsg['data']);
+
+        this.MyGymList.add(gymBean);
+
+        //this._testList.add(new MyGymBean(title: gymBean.name, description: gymBean.introduction, isCollect: true));
+      }
+
+    }
+
+
   }
 
 
-  _getData() {
-    //一个JSON格式的字符串
-    String jsonStr =
-        '[{"title":"健身房名称0","description":"健身房描述健身房描述健身房描述健身房房描述健身房描述健描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"1"},'
-        '{"title":"健身房名称1","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"0"},'
-        '{"title":"健身房名称2","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"1"},'
-        '{"title":"健身房名称3","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"0"},'
-        '{"title":"健身房名称4","description":"健身房描述健身房描述健身房描述健房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"0"},'
-        '{"title":"健身房名称5","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"1"}]';
-    //将JSON字符串转为List
-    _list = json.decode(jsonStr);
-
-    for (int i = 0; i < _list.length; i++) {
-      _testList.add(new MyGymBean(
-          title: _list[i]["title"],
-          description: _list[i]["description"],
-          isCollect: true));
-    }
+  _initList(GymBean gymBean) {
+    // //一个JSON格式的字符串
+    // String jsonStr =
+    //     '[{"title":"健身房名称0","description":"健身房描述健身房描述健身房描述健身房房描述健身房描述健描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"1"},'
+    //     '{"title":"健身房名称1","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"0"},'
+    //     '{"title":"健身房名称2","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"1"},'
+    //     '{"title":"健身房名称3","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"0"},'
+    //     '{"title":"健身房名称4","description":"健身房描述健身房描述健身房描述健房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"0"},'
+    //     '{"title":"健身房名称5","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"1"}]';
+    // //将JSON字符串转为List
+    // _list = json.decode(jsonStr);
+    //
+    // for (int i = 0; i < _list.length; i++) {
+    //   _testList.add(new MyGymBean(
+    //       title: _list[i]["title"],
+    //       description: _list[i]["description"],
+    //       isCollect: true));
+    // }
   }
 
   ///构建一个列表 ListView
@@ -155,7 +178,7 @@ class _MyGymState extends State<MyGym> {
         return MyGymCardItem(
 
           ///子Item对应的数据
-          bean: _testList[index],
+          temp: MyGymList[index],
 
           ///可选参数 子Item标识
           //key: GlobalObjectKey(index),
@@ -163,7 +186,7 @@ class _MyGymState extends State<MyGym> {
       },
 
       ///ListView子Item的个数
-      itemCount: _testList.length,
+      itemCount: MyGymList.length,
     );
   }
 

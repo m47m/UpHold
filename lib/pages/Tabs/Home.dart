@@ -155,28 +155,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List _list = [];
-
-  ///测试数据集合
+  //测试数据集合
   List<TestBean> _testList = [];
-
   //实际数据集合
   List<GymBean> _gymList = [];
-
   String token = "1";
-
   String API = "http://api.uphold.tongtu.xyz";
-
   int _page = 1; //加载的页数
-
   bool isLoading = false; //是否正在加载数据
-
-  //Future<String> _myString;
-
   var _futureBuilderFuture;
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
 
-  RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
   void _onRefresh() async{
     // monitor network fetch
      await Future.delayed(Duration(milliseconds: 1000));
@@ -192,7 +181,7 @@ class _HomePageState extends State<HomePage> {
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 300));
     // if failed,use loadFailed(),if no data return,use LoadNodata()
-    this._getData();
+    //this._getData();
     if(mounted)
       setState(() {
       });
@@ -205,27 +194,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  _getData() {
-    //一个JSON格式的字符串
-    String jsonStr =
-        '[{"title":"健身房名称0","description":"健身房描述健身房描述健身房描述健身房房描述健身房描述健描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"1"},'
-        '{"title":"健身房名称1","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"0"},'
-        '{"title":"健身房名称2","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"1"},'
-        '{"title":"健身房名称3","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"0"},'
-        '{"title":"健身房名称4","description":"健身房描述健身房描述健身房描述健房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"0"},'
-        '{"title":"健身房名称5","description":"健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述健身房描述","isCollect":"1"}]';
-    //将JSON字符串转为List
-    _list = json.decode(jsonStr);
-    for (int i = 0; i < _list.length; i++) {
-      _testList.add(new TestBean(
-          title: _list[i]["title"],
-          description: _list[i]["description"],
-          isCollect: _list[i]["isCollect"] == "1" ? true : false));
-    }
-  }
 
   Future  _initListData() async {
-
      //this._getData();
     final prefs = await SharedPreferences.getInstance();
     String? _token = prefs.getString("token");
@@ -234,30 +204,47 @@ class _HomePageState extends State<HomePage> {
     }
 
     var dio = Dio();
-    final response = await dio.get(
-      API + "/gym/list?page=0&size=10",
-      options: Options(headers: {
-        "Auth": this.token,
-      }));
+    List<int> ids = [];
+    var response1 = await dio.get(
+        API + "/user/info",
+        options: Options(headers: {
+          "Auth": this.token,
+        }));
 
+    if(response1.statusCode == 200){
+      var _PersonMsg = json.decode(response1.toString());
+      List collection = _PersonMsg['data']['collection'];
+      for(var i in collection){
+        ids.add(i['id']);
+      }
+    }
+
+    final response = await dio.get(
+        API + "/gym/list?page=0&size=10",
+        options: Options(headers: {
+          "Auth": this.token,
+        }));
     if (response.statusCode == 200) {
       this._testList.clear();
       this._gymList.clear();
       var msg= jsonDecode(response.toString());
       List GymMsg = msg['data'];
-     // List<GymBean> GymList = GymMsg.map((e) => new GymBean.fromJson(e)).toList();
-
       _gymList = GymMsg.map((e) => new GymBean.fromJson(e)).toList();
 
-      for(var i in _gymList){
-        _testList.add(
-            TestBean(
-            title: i.name,
-            description: i.introduction,
-            isCollect: false)
-        );
-      }
     }
+
+    for(var i in _gymList){
+      _testList.add(
+          TestBean(
+              title: i.name,
+              description: i.introduction,
+              isCollect: ids.contains(i.id))
+      );
+    }
+
+
+
+
   }
 
   ///构建一个列表 ListView
@@ -279,7 +266,6 @@ class _HomePageState extends State<HomePage> {
       ///ListView子Item的个数
       itemCount: _testList.length,
 
-      //controller: _scrollController,
     );
   }
 
