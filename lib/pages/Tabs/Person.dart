@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uphold/components/CodeDialog.dart';
 import 'package:uphold/pages/Persons/Collections.dart';
 import 'package:uphold/pages/Persons/Information.dart';
 import 'package:uphold/pages/Persons/Message.dart';
@@ -121,6 +122,14 @@ class _PersonPageState extends State<PersonPage> {
   List<GymBean> CollectionList = [];
 
   var _futureBuilderFuture;
+
+  // _showDialog() {
+  //   showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return CodeDialog(CodeData: "CodeData");
+  //       });
+  // }
 
   _logout() async {
     final prefs = await SharedPreferences.getInstance();
@@ -333,6 +342,7 @@ class _PersonPageState extends State<PersonPage> {
                         child: InkWell(
                             onTap: () {
                               print("申请教练");
+                              //this._showDialog();
                             },
                             child: Column(
                               children: [

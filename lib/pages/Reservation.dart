@@ -6,6 +6,7 @@ import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -230,6 +231,28 @@ class _ReservartionState extends State<Reservartion> {
   void Order(){
     print("---------------------------");
     print("预约ID = "+this.ReservationId);
+    this.UpdateOrder();
+    //this.UpdateState();
+  }
+
+  UpdateOrder() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? _token = prefs.getString("token");
+
+    var dio = Dio();
+    final response =
+        await dio.post(API + "/user/appointment?id=" + this.GymId,
+        options: Options(headers: {
+          "Auth": _token,
+        }));
+    if (response.statusCode == 200) {
+      var msg = json.decode(response.toString());
+      var code = msg['code'];
+      String toastMsg = code == 0 ? "预约成功":"预约失败";
+
+      EasyLoading.showToast(toastMsg,toastPosition: EasyLoadingToastPosition.bottom);
+    }
+
     this.UpdateState();
   }
 
