@@ -44,20 +44,20 @@ class _GymDetailsState extends State<GymDetails> {
   }
 
   _getData() {
-    //一个JSON格式的字符串
-    String jsonStr =
-        '[{"title":"场所名称0","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"1"},'
-        '{"title":"场所名称1","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"0"},'
-        '{"title":"场所名称2","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"1"},'
-        '{"title":"场所名称3","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"0"},'
-        '{"title":"场所名称4","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"0"},'
-        '{"title":"场所名称5","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"1"}]';
-    //将JSON字符串转为List
-    _list = json.decode(jsonStr);
-    for (int i = 0; i < _list.length; i++) {
-      _testList.add(new VenuesBean(
-          title: _list[i]["title"], description: _list[i]["description"]));
-    }
+    // //一个JSON格式的字符串
+    // String jsonStr =
+    //     '[{"title":"场所名称0","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"1"},'
+    //     '{"title":"场所名称1","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"0"},'
+    //     '{"title":"场所名称2","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"1"},'
+    //     '{"title":"场所名称3","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"0"},'
+    //     '{"title":"场所名称4","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"0"},'
+    //     '{"title":"场所名称5","description":"场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述场所描述","isCollect":"1"}]';
+    // //将JSON字符串转为List
+    // _list = json.decode(jsonStr);
+    // for (int i = 0; i < _list.length; i++) {
+    //   _testList.add(new VenuesBean(
+    //       title: _list[i]["title"], description: _list[i]["description"]));
+    // }
 
     for(int i = 0;i<DataBean!.gymAreas!.length;i++){
     _testList.add(new VenuesBean(title: DataBean!.gymAreas![i].name, description: DataBean!.gymAreas![i].introduction));
@@ -177,7 +177,7 @@ class _GymDetailsState extends State<GymDetails> {
                  child:  OutlinedButton(
                      onPressed: () {
                        Navigator.of(context).push(MaterialPageRoute(
-                           builder: (context) => Apply(
+                           builder: (context) => Apply(id: this.DataBean!.id.toString(),
                            )));
                      },
                      style: ButtonStyle(

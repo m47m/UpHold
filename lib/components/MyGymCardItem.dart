@@ -26,6 +26,7 @@ class _ListItemState extends State<MyGymCardItem> {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => GymDetails(
               title: widget.temp.name,
+              DataBean: widget.temp,
               //title: widget.bean.title,
             )));
       },

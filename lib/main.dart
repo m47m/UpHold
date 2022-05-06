@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
         '/details':(context)=>(GymDetails(title: '',)),
         '/reservartion':(context)=>(Reservartion(title:'', GymId: '', introduction: '',)),
         '/venuesdetails':(context)=>(VenuesDetails(title: ' ',)),
-        '/apply':(context)=>(Apply()),
+        '/apply':(context)=>(Apply(id: '',)),
         '/info':(context)=>(Info()),
         '/photoviewsimplescreen':(context)=>(PhotoViewSimpleScreen(heroTag: '',)),
         '/msgdetails':(context)=>(MsgDetails(bean: new MsgBean(title: "title", description: "description", from: "from", time: "time"),))
