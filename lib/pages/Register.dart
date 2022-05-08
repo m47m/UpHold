@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 import 'Login.dart';
@@ -27,6 +29,8 @@ class _RegisterState extends State<Register> {
   String password2 = "";
   String code = "123";
   String API = "http://api.uphold.tongtu.xyz";
+  RegExp exp = RegExp(
+      r'^((13[0-9])|(14[0-9])|(15[0-9])|(16[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))\d{8}$');
 
   void _initTimer() {
     timer = new Timer.periodic(Duration(seconds: 1), (Timer timer) {
@@ -44,13 +48,12 @@ class _RegisterState extends State<Register> {
     });
   }
 
-
   Future<void> _sendVerificationCode() async {
-    print("注册信息：tel："+tel+"password："+password+"code："+ this.code);
-    var url = Uri.parse(API+"/user/code"+"?phone="+this.tel);
+    print("注册信息：tel：" + tel + "password：" + password + "code：" + this.code);
+    var url = Uri.parse(API + "/user/code" + "?phone=" + this.tel);
     print(url.toString());
 
-   await http.get(url).then((http.Response response) {
+    await http.get(url).then((http.Response response) {
       //处理响应信息
       if (response.statusCode == 200) {
         print(response.body);
@@ -60,8 +63,8 @@ class _RegisterState extends State<Register> {
       } else {
         print('error');
       }
-    }
-    );
+    });
+
 
     // Map data = {
     //   'phone': this.tel,
@@ -73,6 +76,7 @@ class _RegisterState extends State<Register> {
     // print('Response body: ${response.body}');
     // var responseJson = json.decode(response.body);
   }
+
   void _buttonClickListen() {
     setState(() {
       if (isButtonEnable) {
@@ -98,25 +102,26 @@ class _RegisterState extends State<Register> {
   }
 
   _register() async {
-    print("注册信息：tel："+tel+"password："+password+"code："+ this.code);
+    print("注册信息：tel：" + tel + "password：" + password + "code：" + this.code);
     //var url = Uri.parse(API+"/user/login?username="+this.tel+"&password="+this.password);
-    var url = Uri.parse(API+"/user/register");
+    var url = Uri.parse(API + "/user/register");
 
     Map data = {
       'phone': this.tel,
       'password': this.password,
-      'code':this.code,
+      'code': this.code,
     };
     var body = json.encode(data);
-    var response = await http.post(url, headers: {"Content-Type": "application/json"},body: body);
+    var response = await http.post(url,
+        headers: {"Content-Type": "application/json"}, body: body);
     print('Response body: ${response.body}');
     var responseJson = json.decode(response.body);
     Map<String, dynamic> RegisterMsg = responseJson;
     var code = RegisterMsg['code'];
-    if(code == 0){
+    if (code == 0) {
       print("注册成功，请登录");
       Navigator.of(context).pop();
-    }else{
+    } else {
       print("注册失败");
     }
   }
@@ -240,8 +245,8 @@ class _RegisterState extends State<Register> {
                         textInputAction: TextInputAction.go,
                         // obscureText: true,
                         decoration: InputDecoration(
-                            hintText: '请输入密码',
-                            labelText: '密码',
+                            hintText: '请输入验证码',
+                            labelText: '验证码',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
                                 /// 里面的数值尽可能大才是左右半圆形，否则就是普通的圆角形
@@ -261,7 +266,6 @@ class _RegisterState extends State<Register> {
                       ),
                     ),
 
-              
                     Container(
                       width: 120,
                       height: 40,
@@ -276,15 +280,31 @@ class _RegisterState extends State<Register> {
                           ),
                           onPressed: () {
                             setState(() {
-                              _buttonClickListen();
-                              _sendVerificationCode();
+
+                              if (exp.hasMatch(tel)) {
+                                _buttonClickListen();
+                                _sendVerificationCode();
+                              }else{
+                                Fluttertoast.showToast(
+                                    msg: "请确认手机号格式",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.redAccent,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0
+                                );
+                              }
+
+
                             });
                           },
                           child: Text(
                             '$buttonText',
                             style: TextStyle(
-                              color: Colors.black,
-                                fontWeight: FontWeight.w400, fontSize: 13),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 13),
                           )),
                     ),
 

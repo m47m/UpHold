@@ -43,6 +43,8 @@ class _VenuesDetailsState extends State<VenuesDetails> {
   ///测试数据集合
   List<EquipmentBean> _testList = [];
 
+  List<String> imgList = [];
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +68,9 @@ class _VenuesDetailsState extends State<VenuesDetails> {
         'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
         'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80']));
     }
+
+    this.imgList.add('https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80');
+    this.imgList.add('https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80');
   }
 
   @override
@@ -105,7 +110,7 @@ class _VenuesDetailsState extends State<VenuesDetails> {
   }
   // 总count数
   int _getItemListCount() {
-    return this._testList.length + 1;
+    return this.imgList.length + 1;
   }
 
   buildItemWidget(BuildContext context, int index) {
@@ -119,13 +124,63 @@ class _VenuesDetailsState extends State<VenuesDetails> {
 
   Widget _itemBuildWidget(BuildContext context, int index) {
     return new Container(
-      child: EquipmentItem(
-        ///子Item对应的数据
-        bean: _testList[index],
-        ///可选参数 子Item标识
-        //key: GlobalObjectKey(index),
-      ),
+      child: ImgItem(imgList[index]),
     );
+    // return new Container(
+    //   child: EquipmentItem(
+    //     ///子Item对应的数据
+    //     bean: _testList[index],
+    //     ///可选参数 子Item标识
+    //     //key: GlobalObjectKey(index),
+    //   ),
+    // );
+  }
+
+  ImgItem(String url){
+    return   InkWell(
+        onTap: (){
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => PhotoViewSimpleScreen(
+            heroTag: 'simple',
+            imageProvider: NetworkImage(url),
+
+          )));
+    },
+    child: Container(
+      margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Colors.blue,
+          image: DecorationImage(
+            //FileImage 本地图片   、NetworkImage 网络  、AssetImage资源
+              image: NetworkImage(url),
+              fit: BoxFit.cover)),
+      width: 65,
+      height: 280,
+    ),
+    );
+
+    // return Container(
+    //   margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+    //   decoration: BoxDecoration(
+    //       borderRadius: BorderRadius.all(Radius.circular(10)),
+    //       color: Colors.blue,
+    //       image: DecorationImage(
+    //         //FileImage 本地图片   、NetworkImage 网络  、AssetImage资源
+    //           image: NetworkImage(url),
+    //           fit: BoxFit.cover)),
+    //   width: 65,
+    //   height: 280,
+    // );
+    // return Container(
+    //   decoration: BoxDecoration(
+    //       borderRadius: BorderRadius.all(Radius.circular(5)),
+    //       color: Colors.blue,
+    //       image: DecorationImage(
+    //         //FileImage 本地图片   、NetworkImage 网络  、AssetImage资源
+    //           image: NetworkImage(url),
+    //           fit: BoxFit.cover)),
+    // );
   }
 
   // header内容
@@ -184,7 +239,7 @@ class _VenuesDetailsState extends State<VenuesDetails> {
           Container(
             margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
             child: Text(
-              "健身房地理位置健身房地理位置健身房地理位置",
+              "北京市海淀区西土城路10号",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

@@ -196,16 +196,22 @@ class _OrderItemState extends State<OrderItem> {
   _getOrderStatus(int status){
     Widget?  widgetofStatus;
     switch(status){
-      case 1:
-        widgetofStatus = Text(
-          "已完成",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey),
-        );
-        break;
       case 0:
         widgetofStatus = Text(
           "待签到",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.lightGreen),
+        );
+        break;
+      case 1:
+        widgetofStatus = Text(
+          "已取消",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey),
+        );
+        break;
+      case 3:
+        widgetofStatus = Text(
+          "已完成",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey),
         );
         break;
       case 2:
@@ -214,9 +220,21 @@ class _OrderItemState extends State<OrderItem> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.redAccent),
         );
         break;
+      case 4:
+        widgetofStatus = Text(
+          "超时",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color:  Colors.redAccent),
+        );
+        break;
+      default:
+        widgetofStatus = Text(
+          "未知",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color:  Colors.redAccent),
+        );
     }
     return widgetofStatus;
   }
+
 }
 
 
@@ -248,7 +266,10 @@ class OrderCardItem extends StatelessWidget {
     //print(this.temp.id.toString());
 
     print(this.temp.id.toString()+"    "+response.toString());
-    
+
+    print("status: " +this.temp.status.toString());
+
+
     if(response.statusCode == 200){
       var msg = json.decode(response.toString());
 
@@ -285,7 +306,7 @@ class OrderCardItem extends StatelessWidget {
       String toastMsg = "";
       if(code == 0){
        toastMsg = "取消成功";
-       this.bean.status = "1";
+       this.bean.status = "3";
 
       }else{
         toastMsg = "取消失败";
@@ -303,6 +324,7 @@ class OrderCardItem extends StatelessWidget {
       height: 180,
       child: InkWell(
         onTap: (){
+          print("status: " +this.temp.status.toString());
           this._showDialog();
         },
         onLongPress: (){
@@ -392,17 +414,23 @@ class OrderCardItem extends StatelessWidget {
   _getOrderStatus(int status){
     Widget?  widgetofStatus;
     switch(status){
-      case 1:
-       widgetofStatus = Text(
-         "已完成",
-         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey),
-       );
-        break;
       case 0:
         widgetofStatus = Text(
           "待签到",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.lightGreen),
         );
+        break;
+      case 1:
+        widgetofStatus = Text(
+          "已取消",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey),
+        );
+        break;
+      case 3:
+       widgetofStatus = Text(
+         "已完成",
+         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey),
+       );
         break;
       case 2:
         widgetofStatus = Text(
@@ -410,6 +438,17 @@ class OrderCardItem extends StatelessWidget {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.redAccent),
         );
         break;
+      case 4:
+        widgetofStatus = Text(
+          "超时",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color:  Colors.redAccent),
+        );
+        break;
+      default:
+        widgetofStatus = Text(
+          "未知",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color:  Colors.redAccent),
+        );
     }
     return widgetofStatus;
   }

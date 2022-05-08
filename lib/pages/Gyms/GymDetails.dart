@@ -163,7 +163,7 @@ class _GymDetailsState extends State<GymDetails> {
           Container(
             margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
             child: Text(
-              "地理位置:"+"健身房地理位置健身房地理身房地理身房地理位置健身房地理位置",
+              "地理位置:"+"北京市海淀区西土城路10号",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
 
             ),

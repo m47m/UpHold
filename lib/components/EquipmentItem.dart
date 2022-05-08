@@ -27,16 +27,17 @@ class _EquipmentItemState extends State<EquipmentItem> {
   buildColumn() {
     return Column(
       children: [
-        Container(
-          child: Text(
-            widget.bean.title,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
-          ),
-        ),
-        Container(
-          width: 360,
-          child: Text(widget.bean.description),
-        ),
+
+        // Container(
+        //   child: Text(
+        //     widget.bean.title,
+        //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+        //   ),
+        // ),
+        // Container(
+        //   width: 360,
+        //   child: Text(widget.bean.description),
+        // ),
         CarouselSlider(
           options: CarouselOptions(
             height: 200.0,

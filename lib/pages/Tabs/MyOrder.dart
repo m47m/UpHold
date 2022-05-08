@@ -134,7 +134,6 @@ class MyOrder extends StatefulWidget {
 
 class _MyOrderState extends State<MyOrder> {
 
-  List _list = [];
   List<Order> OrderList = [];
   List<OrderBean> _orderList = [];
   String API = "http://api.uphold.tongtu.xyz";
@@ -164,7 +163,11 @@ class _MyOrderState extends State<MyOrder> {
       var msg = json.decode(response.toString());
       List OrderMsg = msg['data'];
 
-      OrderList = OrderMsg.map((e) => new Order.fromJson(e)).toList();
+      if(OrderMsg != null){
+        OrderList = OrderMsg.map((e) => new Order.fromJson(e)).toList();
+      }
+
+
     }
 
     for(var i in OrderList){
