@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uphold/pages/Tabs/MyGym.dart';
 
@@ -73,6 +74,8 @@ class _ApplyState extends State<Apply> {
 
     print(response.toString());
 
+    EasyLoading.showToast("办卡成功",toastPosition: EasyLoadingToastPosition.bottom);
+
   }
 
 
@@ -127,11 +130,16 @@ class _ApplyState extends State<Apply> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+
+            SizedBox(
+              height: 80,
+            ),
+
             this._buildColumn(),
             Container(
               width: 120,
               height: 45,
-              margin: EdgeInsets.fromLTRB(0, 80, 0, 0),
+              margin: EdgeInsets.fromLTRB(0, 100, 0, 0),
               child: OutlinedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.blue.shade300),

@@ -224,11 +224,11 @@ class _MyOrderState extends State<MyOrder> {
         itemBuilder: (BuildContext context, int index) {
           ///每个子Item的布局
           ///在这里是封装到了独立的 StatefulWidget
-          return OrderCardItem(
+          return OrderItem(
             ///子Item对应的数据
             bean: _orderList[index],
 
-            temp: OrderList[0],
+            temp: OrderList[this._orderList.length -1 - index],
 
             ///可选参数 子Item标识
             key: GlobalObjectKey(index),
