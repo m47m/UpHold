@@ -166,11 +166,17 @@ class _HomePageState extends State<HomePage> {
   var _futureBuilderFuture;
   RefreshController _refreshController = RefreshController(initialRefresh: false);
 
+  int page = 0;
+  int size = 8;
+
   void _onRefresh() async{
     // monitor network fetch
      await Future.delayed(Duration(milliseconds: 1000));
+
+     // this.page = 0;
+     // this.size = 8;
      setState(() {
-       this._initListData();
+       //this._initListData();
      });
 
     // if failed,use refreshFailed()
@@ -179,11 +185,13 @@ class _HomePageState extends State<HomePage> {
 
   void _onLoading() async{
     // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(Duration(milliseconds: 200));
     // if failed,use loadFailed(),if no data return,use LoadNodata()
     //this._getData();
     if(mounted)
       setState(() {
+        this.page++;
+        _loadListData();
       });
     _refreshController.loadComplete();
   }
@@ -194,9 +202,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-
-  Future  _initListData() async {
-     //this._getData();
+  _loadListData() async {
     final prefs = await SharedPreferences.getInstance();
     String? _token = prefs.getString("token");
     if (_token != null) {
@@ -220,7 +226,56 @@ class _HomePageState extends State<HomePage> {
     }
 
     final response = await dio.get(
-        API + "/gym/list?page=0&size=10",
+        API + "/gym/list?page="+this.page.toString()+"&size="+this.size.toString(),
+        options: Options(headers: {
+          "Auth": this.token,
+        }));
+
+    if (response.statusCode == 200) {
+      var msg= jsonDecode(response.toString());
+      List GymMsg = msg['data'];
+      var temp = GymMsg.map((e) => new GymBean.fromJson(e)).toList();
+
+      this._gymList.addAll(temp);
+      for(var i in temp){
+        _testList.add(
+            TestBean(
+                title: i.name,
+                description: i.introduction,
+                isCollect: ids.contains(i.id))
+        );
+      }
+
+    }
+  }
+
+
+  Future  _initListData() async {
+
+    final prefs = await SharedPreferences.getInstance();
+    String? _token = prefs.getString("token");
+    if (_token != null) {
+      this.token = _token;
+    }
+
+    var dio = Dio();
+    List<int> ids = [];
+    var response1 = await dio.get(
+        API + "/user/info",
+        options: Options(headers: {
+          "Auth": this.token,
+        }));
+
+    if(response1.statusCode == 200){
+      var _PersonMsg = json.decode(response1.toString());
+      List collection = _PersonMsg['data']['collection'];
+      for(var i in collection){
+        ids.add(i['id']);
+      }
+    }
+
+    final response = await dio.get(
+        API + "/gym/list?page="+this.page.toString()+"&size="+this.size.toString(),
         options: Options(headers: {
           "Auth": this.token,
         }));
@@ -258,7 +313,7 @@ class _HomePageState extends State<HomePage> {
         return GardCardItem(
           ///子Item对应的数据
           bean: _testList[index],
-          temp: _gymList[0],
+          temp: _gymList[index],
           ///可选参数 子Item标识
           // key: GlobalObjectKey(index),
         );

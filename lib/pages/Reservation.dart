@@ -125,7 +125,13 @@ class _ReservartionState extends State<Reservartion> {
 
       //map2 构造
       if (_map2!.containsKey(date)) {
-        _map2![date]!.area.add(area);
+
+        //添加地区
+        if(!_map2![date]!.area.contains(area)){
+          _map2![date]!.area.add(area);
+        }
+
+        //添加地区所对应时间
         if (_map2![date]!.map.containsKey(area)) {
           _map2![date]!.map[area]!.add(new Period(
               startTime.toString().substring(11, 16),
@@ -158,11 +164,16 @@ class _ReservartionState extends State<Reservartion> {
     }
 
     var temp = allDate.toSet().toList();
+
     temp.sort();
+
+
     for (var i in temp) {
       this.Dates.add(
           DateTime.fromMillisecondsSinceEpoch(i).toString().substring(0, 10));
     }
+
+    this.Dates = this.Dates.toSet().toList();
     this.groupValueOfDate = 0;
     this.ReservationDate = this.Dates[this.groupValueOfDate];
 
@@ -175,12 +186,20 @@ class _ReservartionState extends State<Reservartion> {
   }
 
   void UpdateArea() {
+
+    this._list_area.clear();
+    print("--------------------------------");
+    print(this._map2![this.ReservationDate]!.area);
+
     //初始化地点数组
     for (int i = 0; i < this._map2![this.ReservationDate]!.area.length; i++) {
       this
           ._list_area
           .add(new FMRadioModel(i, this._map2![this.ReservationDate]!.area[i]));
     }
+
+
+
     this.groupValueOfArea = 0;
     this.ReservationArea = this._list_area[groupValueOfArea].text;
 
@@ -211,6 +230,8 @@ class _ReservartionState extends State<Reservartion> {
   }
 
   void UpdatePeriod(){
+    this._list_period.clear();
+
     //根据groupValueOfArea和groupValueOfDate初始化时间段数组
     for (int i = 0;
     i < this._map2![ReservationDate]!.map[ReservationArea]!.length;
@@ -241,7 +262,7 @@ class _ReservartionState extends State<Reservartion> {
 
     var dio = Dio();
     final response =
-        await dio.post(API + "/user/appointment?id=" + this.GymId,
+        await dio.post(API + "/user/appointment?id=" + this.ReservationId,
         options: Options(headers: {
           "Auth": _token,
         }));
@@ -262,7 +283,7 @@ class _ReservartionState extends State<Reservartion> {
 
     var dio = Dio();
     final response =
-        await dio.get(API + "/user/appointment/info?id=" + this.GymId,
+        await dio.get(API + "/user/appointment/info?appointment=" + this.ReservationId,
         options: Options(headers: {
           "Auth": _token,
         }));
@@ -274,9 +295,7 @@ class _ReservartionState extends State<Reservartion> {
     }
 
    this.ReservationStatus =  AppointmentList[0].appointed.toString()+"/"+AppointmentList[0].count.toString()+"人";
-    setState(() {
-
-    });
+    setState(() {   });
   }
 
   @override
@@ -445,6 +464,7 @@ class _ReservartionState extends State<Reservartion> {
                             focusedItemDecoration: _getDslDecoration(),
                             ///选中值监听
                             onItemSelectedListener: (item, index, context) {
+
                               //更改地点和时间段数组
                               this.ReservationDate = item;
                               this.UpdateArea();
@@ -483,11 +503,10 @@ class _ReservartionState extends State<Reservartion> {
         onChanged: (index) {
           this.groupValueOfArea = model.index;
           this.ReservationArea = this._list_area[groupValueOfArea].text;
+          this._list_period.clear();
 
           //更改对应的时间段数组
-          for (int i = 0;
-              i < this._map2![ReservationDate]!.map[ReservationArea]!.length;
-              i++) {
+          for (int i = 0; i < this._map2![ReservationDate]!.map[ReservationArea]!.length; i++) {
             this._list_period.add(new PeriodRadioModel(
                 i,
                 this._map2![ReservationDate]!.map[ReservationArea]![i].end_time + " - " + this._map2![ReservationDate]!.map[ReservationArea]![i].start_time,
@@ -495,6 +514,7 @@ class _ReservartionState extends State<Reservartion> {
           }
           this.groupValueOfPeriod = 0;
           this.ReservationPeriod = this._list_period[groupValueOfPeriod].text;
+
 
           setState(() {});
         },
@@ -522,11 +542,13 @@ class _ReservartionState extends State<Reservartion> {
           style: TextStyle(fontSize: 15),
         ),
         onChanged: (index) {
+          //选择时间更新预约状态
           this.groupValueOfPeriod = model.index;
           this.ReservationPeriod = this._list_period[groupValueOfPeriod].text;
           this.ReservationId = this._list_period[groupValueOfPeriod].id;
           print("--------------------------------");
           print("id: " + this.ReservationId);
+          this.UpdateState();
           setState(() {});
         },
       ),
