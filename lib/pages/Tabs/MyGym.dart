@@ -91,6 +91,7 @@ class _MyGymState extends State<MyGym> {
   ///测试数据集合
   List<MyGymBean> _testList = [];
   String API = "http://api.uphold.tongtu.xyz";
+  int i = 0;
 
   var _futureBuilderFuture;
 
@@ -104,43 +105,82 @@ class _MyGymState extends State<MyGym> {
     final prefs = await SharedPreferences.getInstance();
     String? _user = prefs.getString("user");
     String? _token = prefs.getString("token");
-
     var dio = Dio();
-
-    final response = await dio.get(
-        API + "/user/info",
-        options: Options(headers: {
-          "Auth": _token,
-        }));
-
-    if (response.statusCode == 200) {
-      var _PersonMsg = json.decode(response.toString());
-      List register = _PersonMsg['data']['membershipRegisters'];
-
-      Registers = register.map((e) => new MembershipRegisters.fromJson(e)).toList();
-    }
-
-    //print(Registers[0].membershipCard!.gym);
-
-    for(var i in Registers){
-      print(i.membershipCard!.gym);
-
-      var response = await dio.get(
-          API + "/gym/info?id="+i.membershipCard!.gym.toString(),
+    try{
+      final response = await dio.get(
+          API + "/user/info",
           options: Options(headers: {
             "Auth": _token,
           }));
 
-      if(response.statusCode == 200){
-        var _GymMsg = json.decode(response.toString());
-        GymBean gymBean = GymBean.fromJson(_GymMsg['data']);
+      if (response.statusCode == 200) {
+        var _PersonMsg = json.decode(response.toString());
+        List register = _PersonMsg['data']['membershipRegisters'];
 
-        this.MyGymList.add(gymBean);
-
-        //this._testList.add(new MyGymBean(title: gymBean.name, description: gymBean.introduction, isCollect: true));
+        Registers = register.map((e) => new MembershipRegisters.fromJson(e)).toList();
       }
 
+      //print(Registers[0].membershipCard!.gym);
+
+      for(var i in Registers){
+        print(i.membershipCard!.gym);
+
+        var response = await dio.get(
+            API + "/gym/info?id="+i.membershipCard!.gym.toString(),
+            options: Options(headers: {
+              "Auth": _token,
+            }));
+
+        if(response.statusCode == 200){
+          var _GymMsg = json.decode(response.toString());
+          GymBean gymBean = GymBean.fromJson(_GymMsg['data']);
+
+          this.MyGymList.add(gymBean);
+
+          //this._testList.add(new MyGymBean(title: gymBean.name, description: gymBean.introduction, isCollect: true));
+        }
+
+      }
+    }on DioError catch(e){
+      print(e);
+      print("Response StatusCode: "+e.response!.statusCode.toString());
+      this.i = 1;
     }
+
+    // final response = await dio.get(
+    //     API + "/user/info",
+    //     options: Options(headers: {
+    //       "Auth": _token,
+    //     }));
+
+    // if (response.statusCode == 200) {
+    //   var _PersonMsg = json.decode(response.toString());
+    //   List register = _PersonMsg['data']['membershipRegisters'];
+    //
+    //   Registers = register.map((e) => new MembershipRegisters.fromJson(e)).toList();
+    // }
+    //
+    // //print(Registers[0].membershipCard!.gym);
+    //
+    // for(var i in Registers){
+    //   print(i.membershipCard!.gym);
+    //
+    //   var response = await dio.get(
+    //       API + "/gym/info?id="+i.membershipCard!.gym.toString(),
+    //       options: Options(headers: {
+    //         "Auth": _token,
+    //       }));
+    //
+    //   if(response.statusCode == 200){
+    //     var _GymMsg = json.decode(response.toString());
+    //     GymBean gymBean = GymBean.fromJson(_GymMsg['data']);
+    //
+    //     this.MyGymList.add(gymBean);
+    //
+    //     //this._testList.add(new MyGymBean(title: gymBean.name, description: gymBean.introduction, isCollect: true));
+    //   }
+    //
+    // }
 
 
   }
@@ -168,26 +208,39 @@ class _MyGymState extends State<MyGym> {
 
   ///构建一个列表 ListView
   buildListView() {
-    ///懒加载模式构建
-    return ListView.builder(
-
-      ///子Item的构建器
-      itemBuilder: (BuildContext context, int index) {
-        ///每个子Item的布局
-        ///在这里是封装到了独立的 StatefulWidget
-        return MyGymCardItem(
-
-          ///子Item对应的数据
-          temp: MyGymList[index],
-
-          ///可选参数 子Item标识
-          //key: GlobalObjectKey(index),
+    if(this.i == 1){
+      return Center(
+        child: Text("出现了些问题...404"),
+      );
+    }else{
+      if(this.MyGymList.isEmpty){
+        return Center(
+          child: Text("暂无数据"),
         );
-      },
+      }else{
+        ///懒加载模式构建
+        return ListView.builder(
 
-      ///ListView子Item的个数
-      itemCount: MyGymList.length,
-    );
+          ///子Item的构建器
+          itemBuilder: (BuildContext context, int index) {
+            ///每个子Item的布局
+            ///在这里是封装到了独立的 StatefulWidget
+            return MyGymCardItem(
+
+              ///子Item对应的数据
+              temp: MyGymList[index],
+
+              ///可选参数 子Item标识
+              //key: GlobalObjectKey(index),
+            );
+          },
+
+          ///ListView子Item的个数
+          itemCount: MyGymList.length,
+        );
+      }
+    }
+
   }
 
   @override

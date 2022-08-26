@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocation/geolocation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uphold/components/CodeDialog.dart';
 import 'package:uphold/pages/Persons/Collections.dart';
@@ -10,7 +11,6 @@ import 'package:uphold/pages/Persons/Message.dart';
 import 'package:uphold/pages/Persons/Record.dart';
 
 import 'package:http/http.dart' as http;
-
 import '../../main.dart';
 import '../Login.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -123,6 +123,8 @@ class _PersonPageState extends State<PersonPage> {
 
   var _futureBuilderFuture;
 
+  // final location = await getLocation();
+
   // _showDialog() {
   //   showDialog(
   //       context: context,
@@ -140,6 +142,7 @@ class _PersonPageState extends State<PersonPage> {
   }
 
   Future _initUser() async {
+
     final prefs = await SharedPreferences.getInstance();
     String? _user = prefs.getString("user");
     String? _token = prefs.getString("token");
@@ -151,39 +154,46 @@ class _PersonPageState extends State<PersonPage> {
     if (_token != null) {
       this.token = _token;
     }
+    print("token: "+this.token);
 
     var dio = Dio();
 
-    final response = await dio.get(
-        API + "/user/info",
-        options: Options(headers: {
-          "Auth": this.token,
-        }));
+    // final response = await dio.get(
+    //     API + "/user/info",
+    //     options: Options(headers: {
+    //       "Auth": this.token,
+    //     }));
+    //
+    // print('Person Response body: ${response}');
+    //
+    // if(response.statusCode == 200){
+    //   var _PersonMsg = json.decode(response.toString());
+    //   var person = PersonMsg.fromJson(_PersonMsg['data']);
+    //   this.user = person.nickname;
+    //   this.tel = person.phone;
+    //
+    //
+    //   List collection = _PersonMsg['data']['collection'];
+    //
+    //   CollectionList =  collection.map((e) => new GymBean.fromJson(e)).toList();
+    // }
 
-    if(response.statusCode == 200){
-      var _PersonMsg = json.decode(response.toString());
-      var person = PersonMsg.fromJson(_PersonMsg['data']);
-      this.user = person.nickname;
-      this.tel = person.phone;
-
-      List collection = _PersonMsg['data']['collection'];
-
-      CollectionList =  collection.map((e) => new GymBean.fromJson(e)).toList();
+    final GeolocationResult result = await Geolocation.isLocationOperational();
+    if(result.isSuccessful) {
+      print("location service is enabled, and location permission is granted");
+      // location service is enabled, and location permission is granted
+    } else {
+      print("location service is enabled, and location permission is granted");
+      // location service is not enabled, restricted, or location permission is denied
     }
 
-    // var url = Uri.parse(this.sayingApi);
-    // var response = await http.get(url);
-    // print('Response body: ${response.body}');
-    //
-    // var responseJson = json.decode(response.body);
-    // Map<String, dynamic> SayingMsg = responseJson;
-    // this.saying = SayingMsg['hitokoto'].toString();
+
   }
 
   Future _initSaying() async {
     var url = Uri.parse(this.sayingApi);
     var response = await http.get(url);
-    print('Response body: ${response.body}');
+    print('Saying Response body: ${response.body}');
 
     var responseJson = json.decode(response.body);
     Map<String, dynamic> SayingMsg = responseJson;
@@ -288,7 +298,6 @@ class _PersonPageState extends State<PersonPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-
                       GestureDetector(
                         onTap: (){
                                   print("我的收藏");
@@ -304,7 +313,6 @@ class _PersonPageState extends State<PersonPage> {
                             ],
                           )
                       ),
-
                       Container(
                         child: InkWell(
                             onTap: () {

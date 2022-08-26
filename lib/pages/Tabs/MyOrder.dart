@@ -138,7 +138,7 @@ class _MyOrderState extends State<MyOrder> {
   List<OrderBean> _orderList = [];
   String API = "http://api.uphold.tongtu.xyz";
   var _futureBuilderFuture;
-
+  int i = 0;
 
   @override
   void initState() {
@@ -153,37 +153,34 @@ class _MyOrderState extends State<MyOrder> {
 
     var dio = Dio();
 
-    var response = await dio.get(
-        API + "/user/appointment?page=0&size=10",
-        options: Options(headers: {
-          "Auth": _token,
-        }));
+    try{
+      var response = await dio.get(
+          API + "/user/appointment?page=0&size=10",
+          options: Options(headers: {
+            "Auth": _token,
+          }));
+      if(response.statusCode == 200){
+        var msg = json.decode(response.toString());
+        List OrderMsg = msg['data'];
 
-    if(response.statusCode == 200){
-      var msg = json.decode(response.toString());
-      List OrderMsg = msg['data'];
-
-      if(OrderMsg != null){
-        OrderList = OrderMsg.map((e) => new Order.fromJson(e)).toList();
+        if(OrderMsg != null){
+          OrderList = OrderMsg.map((e) => new Order.fromJson(e)).toList();
+        }
       }
 
-
+      for(var i in OrderList){
+        String period = "";
+        var startTime = DateTime.fromMillisecondsSinceEpoch(i.gymAppointment!.startTime!);
+        var endTime = DateTime.fromMillisecondsSinceEpoch(i.gymAppointment!.endTime!);
+        period = startTime.toString().substring(11, 16)+"-"+endTime.toString().substring(11, 16)+"("+ startTime.toString().substring(0,10) +")";
+        //_orderList.add(new OrderBean(period: period, title: i.gymAppointment!.gymArea!.name, description: i.gymAppointment!.gymArea!.introduction, status: i.status.toString()));
+        _orderList.insert(0, new OrderBean(period: period, title: i.gymAppointment!.gymArea!.name, description: i.gymAppointment!.gymArea!.introduction, status: i.status.toString()));
+      }
+    }on DioError catch(e){
+      print(e);
+      print("Response StatusCode: "+e.response!.statusCode.toString());
+      this.i = 1;
     }
-
-    for(var i in OrderList){
-
-      String period = "";
-
-      var startTime = DateTime.fromMillisecondsSinceEpoch(i.gymAppointment!.startTime!);
-      var endTime = DateTime.fromMillisecondsSinceEpoch(i.gymAppointment!.endTime!);
-
-
-      period = startTime.toString().substring(11, 16)+"-"+endTime.toString().substring(11, 16)+"("+ startTime.toString().substring(0,10) +")";
-
-      //_orderList.add(new OrderBean(period: period, title: i.gymAppointment!.gymArea!.name, description: i.gymAppointment!.gymArea!.introduction, status: i.status.toString()));
-      _orderList.insert(0, new OrderBean(period: period, title: i.gymAppointment!.gymArea!.name, description: i.gymAppointment!.gymArea!.introduction, status: i.status.toString()));
-    }
-
   }
 
   // _getData(){
@@ -223,24 +220,38 @@ class _MyOrderState extends State<MyOrder> {
   }
 
   buildListView(){
-    return ListView.builder(
-        itemBuilder: (BuildContext context, int index) {
-          ///每个子Item的布局
-          ///在这里是封装到了独立的 StatefulWidget
-          return OrderItem(
-            ///子Item对应的数据
-            bean: _orderList[index],
+    if(this.i == 1){
+      return Center(
+        child: Text("出现了些问题...404"),
+      );
+    }else{
+      if(this.OrderList.isEmpty){
+        return Center(
+          child: Text("暂无数据"),
+        );
+      }else{
+        return ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            ///每个子Item的布局
+            ///在这里是封装到了独立的 StatefulWidget
+            return OrderItem(
+              ///子Item对应的数据
+              bean: _orderList[index],
 
-            temp: OrderList[this._orderList.length -1 - index],
+              temp: OrderList[this._orderList.length -1 - index],
 
-            ///可选参数 子Item标识
-            key: GlobalObjectKey(index),
+              ///可选参数 子Item标识
+              key: GlobalObjectKey(index),
 
-            context: this.context,
-          );
-        },
-      itemCount: this._orderList.length ,
-    );
+              context: this.context,
+            );
+          },
+          itemCount: this._orderList.length ,
+        );
+      }
+      }
+
+
   }
 
   Widget _buildFuture(BuildContext context, AsyncSnapshot snapshot) {

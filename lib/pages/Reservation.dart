@@ -79,7 +79,6 @@ class _ReservartionState extends State<Reservartion> {
     //initData();
   }
 
-
   Future _getData() async {
     final prefs = await SharedPreferences.getInstance();
     String? _token = prefs.getString("token");
@@ -164,7 +163,6 @@ class _ReservartionState extends State<Reservartion> {
     }
 
     var temp = allDate.toSet().toList();
-
     temp.sort();
 
 
@@ -246,7 +244,6 @@ class _ReservartionState extends State<Reservartion> {
     this.ReservationId = this._list_period[groupValueOfPeriod].id;
 
     UpdateState();
-
   }
 
   void Order(){

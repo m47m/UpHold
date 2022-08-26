@@ -46,6 +46,7 @@ dependencies:
   flutter_easyloading: ^3.0.3
   qr_flutter: ^4.0.0
   modal_bottom_sheet: ^2.0.1
+  geolocation: ^1.1.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
