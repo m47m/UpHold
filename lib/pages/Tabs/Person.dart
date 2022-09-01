@@ -1,8 +1,9 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocation/geolocation.dart';
+//import 'package:location/location.dart';
+
+//import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uphold/components/CodeDialog.dart';
 import 'package:uphold/pages/Persons/Collections.dart';
@@ -11,11 +12,12 @@ import 'package:uphold/pages/Persons/Message.dart';
 import 'package:uphold/pages/Persons/Record.dart';
 
 import 'package:http/http.dart' as http;
-import '../../main.dart';
 import '../Login.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'Home.dart';
+
+import 'package:url_launcher/url_launcher.dart';
 
 class PersonMsg {
   int? id;
@@ -31,19 +33,18 @@ class PersonMsg {
   bool? accountNonExpired;
   bool? accountNonLocked;
 
-  PersonMsg(
-      {required this.id,
-      required this.phone,
-      required this.nickname,
-      required this.headshot,
-      required this.sex,
-      required this.age,
-      this.authorities,
-      this.enabled,
-      this.username,
-      this.credentialsNonExpired,
-      this.accountNonExpired,
-      this.accountNonLocked});
+  PersonMsg({required this.id,
+    required this.phone,
+    required this.nickname,
+    required this.headshot,
+    required this.sex,
+    required this.age,
+    this.authorities,
+    this.enabled,
+    this.username,
+    this.credentialsNonExpired,
+    this.accountNonExpired,
+    this.accountNonLocked});
 
   PersonMsg.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -115,9 +116,10 @@ class _PersonPageState extends State<PersonPage> {
   String user = "动回";
   String tel = "----";
   String token = "1";
-  String API = "http://api.uphold.tongtu.xyz";
+  String API = "http://120.53.102.205";
   String saying = "多少事，从来急，天地转，光阴迫，一万年太久，只争朝夕。";
   String sayingApi = "https://v1.hitokoto.cn/?c=k";
+
   //收藏健身房数组
   List<GymBean> CollectionList = [];
 
@@ -142,7 +144,6 @@ class _PersonPageState extends State<PersonPage> {
   }
 
   Future _initUser() async {
-
     final prefs = await SharedPreferences.getInstance();
     String? _user = prefs.getString("user");
     String? _token = prefs.getString("token");
@@ -154,40 +155,65 @@ class _PersonPageState extends State<PersonPage> {
     if (_token != null) {
       this.token = _token;
     }
-    print("token: "+this.token);
+    print("token: " + this.token);
+    try {
+      var dio = Dio();
 
-    var dio = Dio();
+      final response = await dio.get(
+          API + "/user/info",
+          options: Options(headers: {
+            "Auth": this.token,
+          }));
 
-    // final response = await dio.get(
-    //     API + "/user/info",
-    //     options: Options(headers: {
-    //       "Auth": this.token,
-    //     }));
-    //
-    // print('Person Response body: ${response}');
-    //
-    // if(response.statusCode == 200){
-    //   var _PersonMsg = json.decode(response.toString());
-    //   var person = PersonMsg.fromJson(_PersonMsg['data']);
-    //   this.user = person.nickname;
-    //   this.tel = person.phone;
-    //
-    //
-    //   List collection = _PersonMsg['data']['collection'];
-    //
-    //   CollectionList =  collection.map((e) => new GymBean.fromJson(e)).toList();
-    // }
+      print('Person Response body: ${response}');
 
-    final GeolocationResult result = await Geolocation.isLocationOperational();
-    if(result.isSuccessful) {
-      print("location service is enabled, and location permission is granted");
-      // location service is enabled, and location permission is granted
-    } else {
-      print("location service is enabled, and location permission is granted");
-      // location service is not enabled, restricted, or location permission is denied
+      if (response.statusCode == 200) {
+        var _PersonMsg = json.decode(response.toString());
+        var person = PersonMsg.fromJson(_PersonMsg['data']);
+        this.user = person.nickname;
+        this.tel = person.phone;
+
+
+        List collection = _PersonMsg['data']['collection'];
+
+        CollectionList =
+            collection.map((e) => new GymBean.fromJson(e)).toList();
+      }
+    } on DioError catch (e) {
+      print(e);
+      print("Response StatusCode: " + e.response!.statusCode.toString());
     }
 
+    //检查位置服务状态和权限状态
+    // Location location = new Location();
 
+    // bool _serviceEnabled;
+    // PermissionStatus _permissionGranted;
+    //
+    // _serviceEnabled = await location.serviceEnabled();
+    // if (!_serviceEnabled) {
+    //   //显示原生提示
+    //   _serviceEnabled = await location.requestService();
+    //   if (!_serviceEnabled) {
+    //     return null;
+    //   }
+    // }
+    // //检查应用程序是否具有访问他的权限
+    // _permissionGranted = await location.hasPermission();
+    // ///granted定位服务权限已被授予
+    // ///denied定位权限服务被拒绝
+    // ///deniedForever服务权限被永久拒绝
+    // ///
+    // if (_permissionGranted == PermissionStatus.denied) {
+    //   _permissionGranted = await location.requestPermission();
+    //   if (_permissionGranted != PermissionStatus.granted) {
+    //     return null;
+    //   }
+    // }
+
+    // LocationData _locationData;
+    // _locationData = await location.getLocation();
+    // print(_locationData);
   }
 
   Future _initSaying() async {
@@ -198,6 +224,7 @@ class _PersonPageState extends State<PersonPage> {
     var responseJson = json.decode(response.body);
     Map<String, dynamic> SayingMsg = responseJson;
     this.saying = SayingMsg['hitokoto'].toString();
+
   }
 
   Future _getData() async {
@@ -286,7 +313,7 @@ class _PersonPageState extends State<PersonPage> {
                           )),
                     ),
                   ),
-                  onTap: (){
+                  onTap: () {
                     print("个人详细资料");
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => Info()));
@@ -299,11 +326,13 @@ class _PersonPageState extends State<PersonPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       GestureDetector(
-                        onTap: (){
-                                  print("我的收藏");
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => Collections(collection: this.CollectionList,)));
-                        },
+                          onTap: () {
+                            print("我的收藏");
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    Collections(
+                                      collection: this.CollectionList,)));
+                          },
                           child: Column(
                             children: [
                               Icon(Icons.collections),
@@ -335,7 +364,6 @@ class _PersonPageState extends State<PersonPage> {
                               print("我的消息");
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => Message()));
-
                             },
                             child: Column(
                               children: [
@@ -351,6 +379,7 @@ class _PersonPageState extends State<PersonPage> {
                             onTap: () {
                               print("申请教练");
                               //this._showDialog();
+                              launch('https://flutter.dev');
                             },
                             child: Column(
                               children: [
@@ -371,21 +400,19 @@ class _PersonPageState extends State<PersonPage> {
         SizedBox(
           height: 80,
         ),
-
         GestureDetector(
           child: Container(
             width: 350,
             alignment: Alignment.center,
             child: Text(this.saying),
           ),
-          onTap: (){
+          onTap: () {
             this._initSaying();
             setState(() {
 
             });
           },
-        )
-
+        ),
       ],
     );
   }
@@ -411,38 +438,38 @@ class _PersonPageState extends State<PersonPage> {
         EasyLoading.dismiss();
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
         return PersonCard();
-      // return Container(
-      //   alignment: Alignment.center,
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       Container(
-      //           width: 320,
-      //           height: 320,
-      //           child: Column(
-      //             children: [
-      //               Text(this.user),
-      //               Text(this.token),
-      //             ],
-      //           )),
-      //       Container(
-      //         width: 120,
-      //         height: 50,
-      //         child: OutlinedButton(
-      //             onPressed: () {
-      //               _logout();
-      //             },
-      //             child: Text(
-      //               "退出登录",
-      //               style: TextStyle(
-      //                   color: Colors.black,
-      //                   fontWeight: FontWeight.w400,
-      //                   fontSize: 17),
-      //             )),
-      //       ),
-      //     ],
-      //   ),
-      // );
+    // return Container(
+    //   alignment: Alignment.center,
+    //   child: Column(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     children: [
+    //       Container(
+    //           width: 320,
+    //           height: 320,
+    //           child: Column(
+    //             children: [
+    //               Text(this.user),
+    //               Text(this.token),
+    //             ],
+    //           )),
+    //       Container(
+    //         width: 120,
+    //         height: 50,
+    //         child: OutlinedButton(
+    //             onPressed: () {
+    //               _logout();
+    //             },
+    //             child: Text(
+    //               "退出登录",
+    //               style: TextStyle(
+    //                   color: Colors.black,
+    //                   fontWeight: FontWeight.w400,
+    //                   fontSize: 17),
+    //             )),
+    //       ),
+    //     ],
+    //   ),
+    // );
     }
   }
 }

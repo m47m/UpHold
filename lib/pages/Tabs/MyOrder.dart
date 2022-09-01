@@ -136,7 +136,7 @@ class _MyOrderState extends State<MyOrder> {
 
   List<Order> OrderList = [];
   List<OrderBean> _orderList = [];
-  String API = "http://api.uphold.tongtu.xyz";
+  String API = "http://120.53.102.205";
   var _futureBuilderFuture;
   int i = 0;
 

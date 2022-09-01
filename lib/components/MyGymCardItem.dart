@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:uphold/pages/Gyms/GymDetails.dart';
 import 'package:uphold/pages/Reservation.dart';
@@ -7,10 +8,11 @@ import 'package:uphold/pages/Tabs/MyGym.dart';
 ///ListView 的子Item
 class MyGymCardItem extends StatefulWidget {
   ///本Item对应的数据模型
-
   GymBean temp;
+  String duration;
 
-  MyGymCardItem({required this.temp,Key? key}) : super(key: key);
+  MyGymCardItem({required this.temp, required this.duration, Key? key})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -19,25 +21,36 @@ class MyGymCardItem extends StatefulWidget {
 }
 
 class _ListItemState extends State<MyGymCardItem> {
+
+  NetworkImage _networkImage = new NetworkImage("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg2020.cnblogs.com%2Fblog%2F1377437%2F202010%2F1377437-20201026115408310-1928859784.png&refer=http%3A%2F%2Fimg2020.cnblogs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664536236&t=eb37e13ca6e564f7c53955b5d371c59b");
+
+  String API = "http://120.53.102.205";
+
+  @override
+  void initState(){
+    this.getGymImg();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => GymDetails(
-              title: widget.temp.name,
-              DataBean: widget.temp,
-              //title: widget.bean.title,
-            )));
+                  title: widget.temp.name,
+                  DataBean: widget.temp,
+                  imgUrl: this._networkImage.url,
+                  //title: widget.bean.title,
+                )));
       },
       child: Container(
         width: 320,
         height: 160,
         padding: EdgeInsets.all(10),
         child: buildColumn(),
-      ) ,
+      ),
     );
-
   }
 
   Column buildColumn() {
@@ -62,8 +75,10 @@ class _ListItemState extends State<MyGymCardItem> {
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                     color: Colors.blue,
                     image: DecorationImage(
-                      //FileImage 本地图片   、NetworkImage 网络  、AssetImage资源
-                        image: AssetImage('images/a.jpg'), fit: BoxFit.cover)),
+                        //FileImage 本地图片   、NetworkImage 网络  、AssetImage资源
+                        //image: AssetImage('images/a.jpg'),
+                      image: this._networkImage,
+                        fit: BoxFit.cover)),
                 width: 130,
                 height: 100,
               ),
@@ -92,20 +107,19 @@ class _ListItemState extends State<MyGymCardItem> {
                     height: 30,
                     margin: EdgeInsets.fromLTRB(0, 5, 25, 0),
                     child: OutlinedButton(
-                      onPressed: (){
+                      onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => Reservartion(
-                              title: widget.temp.name,
-                              GymId: widget.temp.id.toString(),
-                              introduction: widget.temp.introduction,
-                            )));
+                                  title: widget.temp.name,
+                                  GymId: widget.temp.id.toString(),
+                                  introduction: widget.temp.introduction,
+                                )));
                       },
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.grey.shade400)
-                      ),
-                      child: Text("预约",style: TextStyle(color: Colors.white)),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.grey.shade400)),
+                      child: Text("预约", style: TextStyle(color: Colors.white)),
                     ),
-
                   ),
                 ],
               )
@@ -115,5 +129,17 @@ class _ListItemState extends State<MyGymCardItem> {
       ],
     );
   }
-}
 
+  //图片
+  getGymImg() async {
+    var dio = Dio();
+    try {
+      var response1 = await dio.get(API+"/gym/headshot/"+widget.temp.id.toString());
+      this._networkImage = NetworkImage(API+"/gym/headshot/"+widget.temp.id.toString());
+      setState(() {
+      });
+    } on DioError catch (e) {
+      print("Response StatusCode: " + e.response!.statusCode.toString());
+    }
+  }
+}

@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
         '/message':(context)=>(Message()),
         '/record':(context)=>(Record()),
         '/collections':(context)=>(Collections(collection: [],)),
-        '/details':(context)=>(GymDetails(title: '',)),
+        '/details':(context)=>(GymDetails(title: '', imgUrl: '',)),
         '/reservartion':(context)=>(Reservartion(title:'', GymId: '', introduction: '',)),
         '/venuesdetails':(context)=>(VenuesDetails(title: ' ',)),
         '/apply':(context)=>(Apply(id: '',)),

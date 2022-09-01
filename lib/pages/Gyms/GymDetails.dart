@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:uphold/components/PhotoViewSimpleScreen.dart';
 import 'package:uphold/components/VenuesCardItem.dart';
@@ -20,9 +21,10 @@ class VenuesBean {
 
 class GymDetails extends StatefulWidget {
   String title = " ";
+  String imgUrl = " ";
   GymBean? DataBean ;
 
-  GymDetails({required this.title, this.DataBean, Key? key}) : super(key: key);
+  GymDetails({required this.title, this.DataBean,required this.imgUrl, Key? key}) : super(key: key);
 
   @override
   _GymDetailsState createState() => _GymDetailsState(this.DataBean);
@@ -30,7 +32,8 @@ class GymDetails extends StatefulWidget {
 
 class _GymDetailsState extends State<GymDetails> {
   _GymDetailsState(this.DataBean);
-
+  String API = "http://120.53.102.205";
+  NetworkImage _networkImage = new NetworkImage("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg2020.cnblogs.com%2Fblog%2F1377437%2F202010%2F1377437-20201026115408310-1928859784.png&refer=http%3A%2F%2Fimg2020.cnblogs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664536236&t=eb37e13ca6e564f7c53955b5d371c59b");
   GymBean? DataBean ;
   String title = " ";
   List _list = [];
@@ -41,6 +44,7 @@ class _GymDetailsState extends State<GymDetails> {
   void initState() {
     super.initState();
     _getData();
+    //getGymImg();
   }
 
   _getData() {
@@ -63,9 +67,11 @@ class _GymDetailsState extends State<GymDetails> {
     _testList.add(new VenuesBean(title: DataBean!.gymAreas![i].name, description: DataBean!.gymAreas![i].introduction));
     }
 
+    print(" gym："+DataBean!.id.toString()+" area ："+DataBean!.gymAreas![0].id.toString());
+
    // if(DataBean != null){
-   //
-   // }
+    //    //
+    //    // }
 
   }
 
@@ -117,17 +123,16 @@ class _GymDetailsState extends State<GymDetails> {
              Navigator.of(context).push(MaterialPageRoute(
                  builder: (context) => PhotoViewSimpleScreen(
                    heroTag: 'simple',
-                   imageProvider: NetworkImage("https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80"),
-
+                   imageProvider: NetworkImage("${widget.imgUrl}"),
                  )));
            },
            child:  Container(
              decoration: BoxDecoration(
                  borderRadius: BorderRadius.all(Radius.circular(1)),
-                 color: Colors.blue,
+                 color: Colors.lightBlueAccent,
                  image: DecorationImage(
                    //FileImage 本地图片   、NetworkImage 网络  、AssetImage资源
-                     image: NetworkImage("https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80"),
+                     image: NetworkImage("${widget.imgUrl}"),
                      fit: BoxFit.cover)),
              height: 180,
            ),
@@ -194,8 +199,6 @@ class _GymDetailsState extends State<GymDetails> {
       ),
     );
   }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -222,6 +225,19 @@ class _GymDetailsState extends State<GymDetails> {
       ),
       body: this.buildListView(),
     );
+  }
+
+  getGymImg() async {
+    var dio = Dio();
+    try {
+      var response1 = await dio.get(API+"/gym/headshot/"+this.DataBean!.id.toString());
+      this._networkImage = NetworkImage(API+"/gym/headshot/"+this.DataBean!.id.toString());
+      setState(() {
+
+      });
+    } on DioError catch (e) {
+      print("Response StatusCode: " + e.response!.statusCode.toString());
+    }
   }
 }
 

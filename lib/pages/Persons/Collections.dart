@@ -29,7 +29,7 @@ class _CollectionsState extends State<Collections> {
 
   _getData() {
     for(var i in collection){
-      _testList.add(new TestBean(title: i.name, description: i.introduction, isCollect: true));
+      _testList.add(new TestBean(title: i.name,  description: i.introduction, isCollect: true, imgURL: 'http://120.53.102.205/gym/headshot/'+i.id.toString()));
     }
   }
 

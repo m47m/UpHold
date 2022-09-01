@@ -33,7 +33,7 @@ class _OrderItemState extends State<OrderItem> {
 
   _OrderItemState( this.bean, this.temp, this.context){}
 
-  String API = "http://api.uphold.tongtu.xyz";
+  String API = "http://120.53.102.205";
 
   _showDialog() async {
     final prefs = await SharedPreferences.getInstance();

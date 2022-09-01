@@ -25,7 +25,7 @@ class _ApplyState extends State<Apply> {
    List<FMRadioModel> _list =[];
   int groupValue = 0;
   String  cardId = '';
-  String API = "http://api.uphold.tongtu.xyz";
+  String API = "http://120.53.102.205";
 
   _ApplyState(this.id){}
 

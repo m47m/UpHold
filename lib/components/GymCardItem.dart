@@ -13,7 +13,6 @@ class GardCardItem extends StatefulWidget {
   final TestBean bean;
   final GymBean temp;
 
-
   GardCardItem({required this.bean, required this.temp, Key? key})
       : super(key: key);
 
@@ -24,7 +23,16 @@ class GardCardItem extends StatefulWidget {
 }
 
 class _ListItemState extends State<GardCardItem> {
-  String API = "http://api.uphold.tongtu.xyz";
+  String API = "http://120.53.102.205";
+  NetworkImage _networkImage = new NetworkImage("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg2020.cnblogs.com%2Fblog%2F1377437%2F202010%2F1377437-20201026115408310-1928859784.png&refer=http%3A%2F%2Fimg2020.cnblogs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664536236&t=eb37e13ca6e564f7c53955b5d371c59b");
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    this.getGymImg();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -33,6 +41,7 @@ class _ListItemState extends State<GardCardItem> {
             builder: (context) => GymDetails(
                   title: widget.bean.title,
                   DataBean: widget.temp,
+                  imgUrl: this._networkImage.url,
                 )));
       },
       child: Container(
@@ -67,10 +76,12 @@ class _ListItemState extends State<GardCardItem> {
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
-                    color: Colors.blue,
+                    //color: Colors.lightBlueAccent,
                     image: DecorationImage(
                         //FileImage 本地图片   、NetworkImage 网络  、AssetImage资源
-                        image: AssetImage('images/a.jpg'),
+                        //image: AssetImage('images/a.jpg'),
+                        //image: NetworkImage("${widget.bean.imgURL}"),
+                        image: this._networkImage,
                         fit: BoxFit.cover)),
                 width: 130,
                 height: 100,
@@ -100,9 +111,7 @@ class _ListItemState extends State<GardCardItem> {
                       iconSize: 30,
                       onPressed: () {
                         _collect();
-                        setState(() {
-
-                        });
+                        setState(() {});
                       },
                       icon: Icon(widget.bean.isCollect
                           ? Icons.favorite
@@ -147,41 +156,40 @@ class _ListItemState extends State<GardCardItem> {
     String? _token = prefs.getString("token");
     Response response;
     String ToastMsg;
-    if(widget.bean.isCollect){
+    if (widget.bean.isCollect) {
       //取消收藏
-      response = await dio.post(
-          API + "/user/collect?id="+widget.temp.id.toString(),
-          options: Options(headers: {
-            "Auth": _token,
-          }));
+      response =
+          await dio.post(API + "/user/collect?id=" + widget.temp.id.toString(),
+              options: Options(headers: {
+                "Auth": _token,
+              }));
 
       ToastMsg = "取消成功";
-
-    }else{
+    } else {
       //收藏
-     response = await dio.get(
-          API + "/user/collect?id="+widget.temp.id.toString(),
-          options: Options(headers: {
-            "Auth": _token,
-          }));
-     ToastMsg = "收藏成功";
+      response =
+          await dio.get(API + "/user/collect?id=" + widget.temp.id.toString(),
+              options: Options(headers: {
+                "Auth": _token,
+              }));
+      ToastMsg = "收藏成功";
     }
 
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       var CollectMsg = json.decode(response.toString());
       var code = CollectMsg['code'];
 
-      if(code == 0){
+      if (code == 0) {
         setState(() {
           widget.bean.isCollect = !widget.bean.isCollect;
         });
 
-        EasyLoading.showToast(ToastMsg,toastPosition: EasyLoadingToastPosition.bottom);
+        EasyLoading.showToast(ToastMsg,
+            toastPosition: EasyLoadingToastPosition.bottom);
       }
-
     }
-
   }
+
   ///内容区域
   Row buildRow() {
     ///左右线性排开
@@ -213,5 +221,19 @@ class _ListItemState extends State<GardCardItem> {
         ),
       ],
     );
+  }
+
+  //图片
+  getGymImg() async {
+    var dio = Dio();
+    try {
+      var response1 = await dio.get(widget.bean.imgURL);
+      this._networkImage = NetworkImage(widget.bean.imgURL);
+      setState(() {
+
+      });
+    } on DioError catch (e) {
+      print("Response StatusCode: " + e.response!.statusCode.toString());
+    }
   }
 }

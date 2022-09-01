@@ -19,7 +19,7 @@ class _LoginState extends State<Login> {
   String tel = "";
   String password = "";
   String API = "http://api.tongtu.xyz";
-  String API2 = "http://api.uphold.tongtu.xyz";
+  String API2 = "http://120.53.102.205";
 
   _login() async {
     print("登录信息：tel："+tel+"password："+password);

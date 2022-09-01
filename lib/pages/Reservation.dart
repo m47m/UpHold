@@ -31,7 +31,7 @@ class Reservartion extends StatefulWidget {
 }
 
 class _ReservartionState extends State<Reservartion> {
-  String API = "http://api.uphold.tongtu.xyz";
+  String API = "http://120.53.102.205";
 
   var _futureBuilderFuture;
 

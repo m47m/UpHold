@@ -90,7 +90,7 @@ class _MyGymState extends State<MyGym> {
 
   ///测试数据集合
   List<MyGymBean> _testList = [];
-  String API = "http://api.uphold.tongtu.xyz";
+  String API = "http://120.53.102.205";
   int i = 0;
 
   var _futureBuilderFuture;
@@ -112,29 +112,29 @@ class _MyGymState extends State<MyGym> {
           options: Options(headers: {
             "Auth": _token,
           }));
-
       if (response.statusCode == 200) {
         var _PersonMsg = json.decode(response.toString());
         List register = _PersonMsg['data']['membershipRegisters'];
 
         Registers = register.map((e) => new MembershipRegisters.fromJson(e)).toList();
+
+        print(response.toString());
       }
 
       //print(Registers[0].membershipCard!.gym);
 
       for(var i in Registers){
-        print(i.membershipCard!.gym);
-
+        print("Registers"+i.membershipCard!.gym.toString());
         var response = await dio.get(
             API + "/gym/info?id="+i.membershipCard!.gym.toString(),
             options: Options(headers: {
               "Auth": _token,
             }));
-
+        print(response.statusCode);
         if(response.statusCode == 200){
           var _GymMsg = json.decode(response.toString());
           GymBean gymBean = GymBean.fromJson(_GymMsg['data']);
-
+          print(response.toString());
           this.MyGymList.add(gymBean);
 
           //this._testList.add(new MyGymBean(title: gymBean.name, description: gymBean.introduction, isCollect: true));
@@ -181,10 +181,7 @@ class _MyGymState extends State<MyGym> {
     //   }
     //
     // }
-
-
   }
-
 
   _initList(GymBean gymBean) {
     // //一个JSON格式的字符串
@@ -220,21 +217,18 @@ class _MyGymState extends State<MyGym> {
       }else{
         ///懒加载模式构建
         return ListView.builder(
-
           ///子Item的构建器
           itemBuilder: (BuildContext context, int index) {
             ///每个子Item的布局
             ///在这里是封装到了独立的 StatefulWidget
             return MyGymCardItem(
-
               ///子Item对应的数据
               temp: MyGymList[index],
-
+              duration: Registers[index].membershipCard!.duration.toString(),
               ///可选参数 子Item标识
               //key: GlobalObjectKey(index),
             );
           },
-
           ///ListView子Item的个数
           itemCount: MyGymList.length,
         );
